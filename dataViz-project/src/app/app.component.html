@@ -1,0 +1,18 @@
+<div>
+  <app-toolbar></app-toolbar>
+  <mat-grid-list cols="2" rowHeight="2:1">
+    <!--Conflict Map tile -->
+    <mat-grid-tile colspan="2">
+      <app-conflict-pannel></app-conflict-pannel>
+      </mat-grid-tile>
+    <!--Conflict Stats tile -->
+    <mat-grid-tile>
+      <app-conflict-stats></app-conflict-stats>  
+    </mat-grid-tile>
+    <!-- Other -->
+    <mat-grid-tile>3</mat-grid-tile>
+  </mat-grid-list>
+  
+</div>
+
+<router-outlet></router-outlet>
