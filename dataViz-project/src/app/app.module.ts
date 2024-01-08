@@ -11,6 +11,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ConflictPannelComponent } from './components/conflict-pannel/conflict-pannel.component';
 import { ConflictStatsComponent } from './components/conflict-stats/conflict-stats.component';
+import { ConflictsService } from './services/conflicts.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -24,9 +26,10 @@ import { ConflictStatsComponent } from './components/conflict-stats/conflict-sta
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
-    MatGridListModule
+    MatGridListModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [ConflictsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
