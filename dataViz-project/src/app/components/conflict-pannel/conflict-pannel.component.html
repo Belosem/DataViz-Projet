@@ -5,7 +5,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
             <mat-datepicker #pickerStart></mat-datepicker>
         </mat-form-field>
-        ->
+        <mat-icon aria-hidden="false" aria-label="arrow_forward" fontIcon="arrow_forward"></mat-icon>
         <mat-form-field class="period-datetime-selector-end">
             <input matInput [(ngModel)]="endDate" [matDatepicker]="pickerEnd" (dateChange)="onDateChange()" placeholder="Choose an end date">
             <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
@@ -14,8 +14,12 @@
     </div>
     
     <div class="period-selector-buttons-view-modes-containers">
-        <button mat-icon-button (click)="changeViewMode('basic')">Basic</button>
-        <button mat-icon-button (click)="changeViewMode('detailed')"> Detailed</button>
+        <button mat-icon-button  (click)="changeViewMode('basic')">
+            <mat-icon aria-label="Basic view">control_point_two_tone_icon </mat-icon>
+        </button>
+        <button mat-icon-button (click)="changeViewMode('detailed')">
+            <mat-icon aria-label="Detailed view">control_point_duplicate_two_tone_icon </mat-icon>
+        </button>
     </div>
     <div class="period-selector-legend" id="period-selector-legend">
         <!-- CONTAING SVG : Do Not Edit Here /!\ -->

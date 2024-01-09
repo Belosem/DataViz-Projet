@@ -11,7 +11,9 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon'; 
 // Components
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ConflictPannelComponent } from './components/conflict-pannel/conflict-pannel.component';
@@ -24,7 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppComponent,
     ToolbarComponent,
     ConflictPannelComponent,
-    ConflictStatsComponent
+    ConflictStatsComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +37,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatDatepickerModule,
     MatGridListModule,
     MatNativeDateModule,
+    MatButtonModule,
+    MatIconModule,
     MatInputModule,
     HttpClientModule,
     MatFormFieldModule

@@ -93,7 +93,7 @@ export class ConflictPannelComponent implements AfterViewInit {
    * Create the chart
    */
   private createChart() {
-    const margin = { top: 10, right: 15, bottom: 20, left: 15 };
+    const margin = { top: 60, right: 15, bottom: 20, left: 15 };
     const parent = d3.select('#conflict-pannel-container').node() as HTMLElement;
     const width = parent.clientWidth - 50;
     const height = parent.clientHeight - 50;
@@ -153,8 +153,8 @@ export class ConflictPannelComponent implements AfterViewInit {
         d3.select(this)
           .style('fill', 'lightgray')
           .style('cursor', 'pointer')
-          .style('stroke', '#000000')
-          .style('stroke-width', 1);
+          //.style('stroke', '#000000')
+          //.style('stroke-width', 1);
        })
       .on('mouseout', function () { d3.select(this).style('fill', 'transparent').style('stroke-width', 0); });
 
@@ -249,7 +249,7 @@ export class ConflictPannelComponent implements AfterViewInit {
       .style('text-anchor', 'start')
       .text((d : any) => d);
   }
-  
+
   onDateChange(): void {
     // Update the selectedPeriod with new start and end dates
     this.selectedPeriod = [this.startDate, this.endDate];
