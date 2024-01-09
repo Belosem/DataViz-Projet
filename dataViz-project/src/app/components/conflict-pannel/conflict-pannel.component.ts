@@ -17,6 +17,11 @@ export class ConflictPannelComponent implements AfterViewInit {
   eventsBySelectedPeriod = new Map(); // Map Containing the list of events by dates on the selected period
   viewMode = 'basic'; // (basic | detailed) : basic = only UA,RU,NEUTRAL, detailed = all types
   eventTypes : string[] = [];
+  // Date pickers
+  pickerStart : any;
+  pickerEnd : any;
+  startDate: Date = new Date();
+  endDate: Date = new Date();
   /**
    * Constructor : get the events from the conflicts service
    * @param conflictsService 
@@ -36,7 +41,8 @@ export class ConflictPannelComponent implements AfterViewInit {
     const lastMonth = new Date(lastEventDate);
     lastMonth.setDate(lastEventDate.getDate() - 31);
     this.selectedPeriod = [lastMonth, lastEventDate];
-
+    this.startDate = lastMonth;
+    this.endDate = lastEventDate;
     // Create a Map with the list of events by date
     this.events.forEach((event: any) => {
       const date = event.date;
@@ -50,6 +56,11 @@ export class ConflictPannelComponent implements AfterViewInit {
     this.updateMapSelectedPeriod();
   }
 
+  dateSelectionFilter = (d: Date): boolean => {
+    const day = d.getDay();
+    // Prevent Saturday and Sunday from being selected.
+    return day !== 0 && day !== 6;
+  }
   /**
    * After view init : create the chart
    * Function executed after the view is initialized
@@ -66,6 +77,7 @@ export class ConflictPannelComponent implements AfterViewInit {
    */
   private updateMapSelectedPeriod() {
     // Create a Map with the list of events by date for the selected period
+
     const list_days_in_period = d3.timeDay.range(this.selectedPeriod[0], this.selectedPeriod[1]);
     list_days_in_period.forEach((date: any) => {
       const transformedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
@@ -137,8 +149,14 @@ export class ConflictPannelComponent implements AfterViewInit {
       .attr('height', y(0) - margin.top)
       .style('fill', 'transparent')
       .style('pointer-events', 'all')
-      .on('mouseover', function () { d3.select(this).style('fill', 'lightgray'); })
-      .on('mouseout', function () { d3.select(this).style('fill', 'transparent'); });
+      .on('mouseover', function () { 
+        d3.select(this)
+          .style('fill', 'lightgray')
+          .style('cursor', 'pointer')
+          .style('stroke', '#000000')
+          .style('stroke-width', 1);
+       })
+      .on('mouseout', function () { d3.select(this).style('fill', 'transparent').style('stroke-width', 0); });
 
     // Adjust circles to be approximately centered between the ticks
     const numDates = selected_events.length;
@@ -231,7 +249,13 @@ export class ConflictPannelComponent implements AfterViewInit {
       .style('text-anchor', 'start')
       .text((d : any) => d);
   }
-
+  
+  onDateChange(): void {
+    // Update the selectedPeriod with new start and end dates
+    this.selectedPeriod = [this.startDate, this.endDate];
+    this.updateMapSelectedPeriod();
+    this.changeViewMode(this.viewMode);
+  }
   /**
   * Change the view mode
   * @param viewMode 

@@ -7,6 +7,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Material modules
 import {MatToolbarModule} from '@angular/material/toolbar'; 
 import {MatGridListModule} from '@angular/material/grid-list'; 
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 // Components
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ConflictPannelComponent } from './components/conflict-pannel/conflict-pannel.component';
@@ -25,9 +30,14 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    FormsModule,
     MatToolbarModule,
+    MatDatepickerModule,
     MatGridListModule,
-    HttpClientModule
+    MatNativeDateModule,
+    MatInputModule,
+    HttpClientModule,
+    MatFormFieldModule
   ],
   providers: [ConflictsService],
   bootstrap: [AppComponent]

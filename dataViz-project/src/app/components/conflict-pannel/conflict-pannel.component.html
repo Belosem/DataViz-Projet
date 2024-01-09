@@ -1,9 +1,18 @@
 <div class="period-selector-header">
     <div class="period-datetime-selector">
-        {{selectedDateFormat(selectedPeriod[0])}}
+        <mat-form-field class="period-datetime-selector-start">
+            <input matInput [(ngModel)]="startDate" [matDatepicker]="pickerStart" (dateChange)="onDateChange()" placeholder="Choose a start date">
+            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStart></mat-datepicker>
+        </mat-form-field>
         ->
-        {{selectedDateFormat(selectedPeriod[1])}}
+        <mat-form-field class="period-datetime-selector-end">
+            <input matInput [(ngModel)]="endDate" [matDatepicker]="pickerEnd" (dateChange)="onDateChange()" placeholder="Choose an end date">
+            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd></mat-datepicker>
+        </mat-form-field>
     </div>
+    
     <div class="period-selector-buttons-view-modes-containers">
         <button mat-icon-button (click)="changeViewMode('basic')">Basic</button>
         <button mat-icon-button (click)="changeViewMode('detailed')"> Detailed</button>
