@@ -1,3 +1,18 @@
+<div class="period-selector-header">
+    <div class="period-datetime-selector">
+        {{selectedDateFormat(selectedPeriod[0])}}
+        ->
+        {{selectedDateFormat(selectedPeriod[1])}}
+    </div>
+    <div class="period-selector-buttons-view-modes-containers">
+        <button mat-icon-button (click)="changeViewMode('basic')">Basic</button>
+        <button mat-icon-button (click)="changeViewMode('detailed')"> Detailed</button>
+    </div>
+    <div class="period-selector-legend" id="period-selector-legend">
+        <!-- CONTAING SVG : Do Not Edit Here /!\ -->
+    </div>
+</div>
+
 <div id="period-selector">
-    
+    <!-- CONTAINING THE SVG : Do Not Edit Here /!\ -->
 </div>
