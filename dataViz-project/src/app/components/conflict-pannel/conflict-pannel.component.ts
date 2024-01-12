@@ -16,10 +16,10 @@ export class ConflictPannelComponent implements AfterViewInit {
   eventsByDate = new Map(); // Map Containing the list of events by dates
   eventsBySelectedPeriod = new Map(); // Map Containing the list of events by dates on the selected period
   viewMode = 'basic'; // (basic | detailed) : basic = only UA,RU,NEUTRAL, detailed = all types
-  eventTypes : string[] = [];
+  eventTypes: string[] = [];
   // Date pickers
-  pickerStart : any;
-  pickerEnd : any;
+  pickerStart: any;
+  pickerEnd: any;
   startDate: Date = new Date();
   endDate: Date = new Date();
   /**
@@ -28,7 +28,7 @@ export class ConflictPannelComponent implements AfterViewInit {
    */
   constructor(private conflictsService: ConflictsService) {
     console.log('conflict pannel constructor');
-    this.events = this.conflictsService.getEvents().map((event: any) => {
+    this.events = this.conflictsService.getAllEvents().map((event: any) => {
       return {
         ...event,
         date: new Date(event.date)  // ISO 8601 format for dates
@@ -53,6 +53,13 @@ export class ConflictPannelComponent implements AfterViewInit {
       }
       this.eventsByDate.get(transformedDate).push(event);
     });
+
+    this.conflictsService.selectedEvents$.subscribe((selectedEvents: any) => {
+      this.eventsBySelectedPeriod = selectedEvents;
+      this.updateMapSelectedPeriod();
+      console.log('Events by eventsBySelectedPeriod in subscribe:', this.eventsBySelectedPeriod);
+    });
+    
     this.updateMapSelectedPeriod();
   }
 
@@ -68,7 +75,7 @@ export class ConflictPannelComponent implements AfterViewInit {
   ngAfterViewInit() {
     console.log('conflict pannel after view init');
     this.createChart();
-    if(this.viewMode === 'basic')
+    if (this.viewMode === 'basic')
       this.createLegend();
   }
 
@@ -85,6 +92,7 @@ export class ConflictPannelComponent implements AfterViewInit {
         this.eventsBySelectedPeriod.set(transformedDate, []);
       }
       this.eventsBySelectedPeriod.get(transformedDate).push(this.eventsByDate.get(transformedDate));
+      this.conflictsService.setEventsBySelectedPeriod(this.eventsBySelectedPeriod, this.selectedPeriod[0], this.selectedPeriod[1]);
     });
     console.log('Events by eventsBySelectedPeriod :', this.eventsBySelectedPeriod);
   }
@@ -149,13 +157,13 @@ export class ConflictPannelComponent implements AfterViewInit {
       .attr('height', y(0) - margin.top)
       .style('fill', 'transparent')
       .style('pointer-events', 'all')
-      .on('mouseover', function () { 
+      .on('mouseover', function () {
         d3.select(this)
           .style('fill', 'lightgray')
           .style('cursor', 'pointer')
-          //.style('stroke', '#000000')
-          //.style('stroke-width', 1);
-       })
+        //.style('stroke', '#000000')
+        //.style('stroke-width', 1);
+      })
       .on('mouseout', function () { d3.select(this).style('fill', 'transparent').style('stroke-width', 0); });
 
     // Adjust circles to be approximately centered between the ticks
@@ -202,7 +210,7 @@ export class ConflictPannelComponent implements AfterViewInit {
     eventsByDayAndType.forEach((dayEvents, date) => {
       let cumulativeCount = 0;
 
-      dayEvents.forEach((count : number, eventType : string) => {
+      dayEvents.forEach((count: number, eventType: string) => {
         // Compute the center position for each circle
         const circleX = x(new Date(date.split('-').reverse().join('-'))) + offset
         const circleY = y(cumulativeCount + count / 2);
@@ -220,34 +228,34 @@ export class ConflictPannelComponent implements AfterViewInit {
     });
   }
 
-  createLegend(){
+  createLegend() {
     this.eventTypes = [...new Set(this.eventTypes)];
-    
+
     d3.select('#period-selector-legend')
       .append('svg')
       .attr('width', 100)
       .attr('height', 100)
       .attr('class', 'period-selector-legend-svg');
-    
+
     const svg = d3.select('#period-selector-legend').select('svg');
     const legend = svg.selectAll('.legend')
       .data(this.eventTypes)
       .enter().append('g')
       .attr('class', 'period-selector-legend')
       .attr('transform', (d, i) => { return 'translate(0,' + i * 20 + ')'; });
-    
+
     legend.append('rect')
       .attr('x', 18)
       .attr('width', 18)
       .attr('height', 18)
-      .style('fill', (d : any) => d3.schemeCategory10[this.eventTypes.indexOf(d)]);
+      .style('fill', (d: any) => d3.schemeCategory10[this.eventTypes.indexOf(d)]);
 
     legend.append('text')
       .attr('x', 40)
       .attr('y', 9)
       .attr('dy', '.35em')
       .style('text-anchor', 'start')
-      .text((d : any) => d);
+      .text((d: any) => d);
   }
 
   onDateChange(): void {
@@ -260,13 +268,13 @@ export class ConflictPannelComponent implements AfterViewInit {
   * Change the view mode
   * @param viewMode 
   */
-  public changeViewMode(viewMode : string) {
+  public changeViewMode(viewMode: string) {
     this.viewMode = viewMode;
     d3.select('.period-selector-svg').remove();
     this.updateMapSelectedPeriod();
     this.createChart();
     d3.select('#period-selector-legend').select('.period-selector-legend-svg').remove();
-    if(this.viewMode === 'basic'){
+    if (this.viewMode === 'basic') {
       this.createLegend();
     }
   }
