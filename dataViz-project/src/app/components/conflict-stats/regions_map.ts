@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 
 import * as d3 from 'd3';
 import { geoMercator, geoPath } from 'd3';
@@ -8,23 +8,47 @@ import { geoMercator, geoPath } from 'd3';
   templateUrl: './conflict-stats.component.html',
   styleUrls: ['./conflict-stats.component.scss']
 })
-export class ConflictStatsComponent {
+export class ConflictStatsComponent implements OnInit{
   data: any;
+  selectedRegion: string = 'Adygeya';
+  regions: { value: string; label: string }[] = [
+    { value: 'Adygeya', label: 'Adygeya' },
+    { value: 'Altay', label: 'Altay'}
+    // Add more regions as needed
+  ];
 
-  constructor() {
+  constructor() {}
 
+  ngOnInit() {
+    // Load data for the default region on app loading
+    this.loadData();
   }
-  ngAfterViewInit() {
-    // Load data
-    d3.json('../../../assets/data/russia_geojson/Russia.geojson').then(
-      (jsonData) => {
-        this.data = jsonData;
-        console.log('Data loaded :', jsonData);
 
-        this.drawMap(this.data);
+  AfterViewInit() {
+    // Load initial data
+    this.loadData();
+  }
+
+  onRegionChange() {
+    // Load data for the selected region
+    this.loadData();
+  }
+
+
+  loadData() {
+    const regionPath = `../../../assets/data/russia_geojson/${this.selectedRegion}.geojson`;
+
+    d3.json(regionPath).then(
+      (donneesGeo) => {
+        console.log('data', donneesGeo)
+        // Clear previous map
+        d3.select('#map-container').selectAll('*').remove();
+
+        // Draw map
+        this.drawMap(donneesGeo);
       },
-      (erreur) => {
-        console.error('Error when loading data :', erreur);
+      (error) => {
+        console.error('Error loading data:', error);
       }
     );
   }
@@ -32,7 +56,7 @@ export class ConflictStatsComponent {
   /* 
   * Draw geo map
   */
-  drawMap(jsonData: any) {
+  drawMap(donneesGeo: any) {
     // Access the container of conflict-stats
     const statsContainer = d3.select('#conflict-stats-container').node() as HTMLElement;
 
@@ -42,13 +66,25 @@ export class ConflictStatsComponent {
 
     // Define projection
     const projection = geoMercator()
-      .center([100, 71])  // Adjust the center to focus on the region
+      .center([40, 44.6])  // Adjust the center to focus on the region
       .translate([width / 2, height / 2])
-      .scale(200);
+      .scale(9000);
     const path = geoPath().projection(projection);
     const svg = d3.select('#map-container').append('svg')
       .attr('width', width)
       .attr('height', height);
+
+    // Create a tooltip div
+    const tooltip = d3.select('#conflict-stats-container').append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0);
+
+    // Draw map
+    svg.append('path')
+      .attr('d', path(donneesGeo.geometry))
+      .attr('fill', 'steelblue')
+      .attr('stroke', 'black');
+/* Russia
 
     // Create a tooltip div
     const tooltip = d3
@@ -59,7 +95,7 @@ export class ConflictStatsComponent {
     // Draw map
     svg
       .selectAll('path')
-      .data(jsonData.features)
+      .data(donneesGeo.features)
       .enter()
       .append("path")
       .attr("d", (d: any) => path(d))
@@ -85,6 +121,7 @@ export class ConflictStatsComponent {
         // Hide tooltip on mouseout
         tooltip.classed("hidden", true);
       });
+  */
 
     console.log('Map created successfully !');
   }
