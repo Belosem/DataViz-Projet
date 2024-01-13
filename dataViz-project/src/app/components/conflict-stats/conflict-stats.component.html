@@ -1,10 +1,7 @@
-
-<!--
-<<div class="select-container">
-    <select [(ngModel)]="selectedRegion" (change)="onRegionChange()">
-        <option *ngFor="let region of regions" [value]="region.value">{{ region.label }}</option>
+<div class="select-container">
+    <select [(ngModel)]="selectedCountry" (change)="onCountryChange()">
+        <option *ngFor="let country of countries" [value]="country.value">{{ country.label }}</option>
     </select>
-</div>>
--->
+</div>
 
 <div id="map-container"></div>
