@@ -22,6 +22,7 @@ export class ConflictPannelComponent implements AfterViewInit {
   pickerEnd: any;
   startDate: Date = new Date();
   endDate: Date = new Date();
+
   /**
    * Constructor : get the events from the conflicts service
    * @param conflictsService 
@@ -54,12 +55,6 @@ export class ConflictPannelComponent implements AfterViewInit {
       this.eventsByDate.get(transformedDate).push(event);
     });
 
-    this.conflictsService.selectedEvents$.subscribe((selectedEvents: any) => {
-      this.eventsBySelectedPeriod = selectedEvents;
-      this.updateMapSelectedPeriod();
-      console.log('Events by eventsBySelectedPeriod in subscribe:', this.eventsBySelectedPeriod);
-    });
-    
     this.updateMapSelectedPeriod();
   }
 
@@ -77,6 +72,15 @@ export class ConflictPannelComponent implements AfterViewInit {
     this.createChart();
     if (this.viewMode === 'basic')
       this.createLegend();
+
+    /** Updating events when changed */
+    /*this.conflictsService.selectedEvents$.subscribe((selectedEvents: any) => {
+      this.eventsBySelectedPeriod = selectedEvents;
+      this.updateMapSelectedPeriod();
+      console.log('Events by eventsBySelectedPeriod in subscribe:', this.eventsBySelectedPeriod);
+    });
+    */
+
   }
 
   /**
@@ -145,31 +149,9 @@ export class ConflictPannelComponent implements AfterViewInit {
       .domain([0, max_number_events_per_day + 10])
       .range([height - margin.bottom, margin.top]);
 
-    // Append hoverable rectangles
-    svg.selectAll('.hover-rect')
-      .data(selected_events)
-      .enter()
-      .append('rect')
-      .attr('class', 'hover-rect')
-      .attr('x', (d, i) => tickPositions[i] - tickWidth / 2)
-      .attr('y', margin.top)
-      .attr('width', tickWidth)
-      .attr('height', y(0) - margin.top)
-      .style('fill', 'transparent')
-      .style('pointer-events', 'all')
-      .on('mouseover', function () {
-        d3.select(this)
-          .style('fill', 'lightgray')
-          .style('cursor', 'pointer')
-        //.style('stroke', '#000000')
-        //.style('stroke-width', 1);
-      })
-      .on('mouseout', function () { d3.select(this).style('fill', 'transparent').style('stroke-width', 0); });
-
     // Adjust circles to be approximately centered between the ticks
     const numDates = selected_events.length;
     const offset = (width) / (numDates * 2); // Calculate an offset to center the circles
-
     // Create a list of event types
     this.eventTypes = [];
     // Process data to group and count events by type for each day
@@ -201,29 +183,114 @@ export class ConflictPannelComponent implements AfterViewInit {
       eventsByDayAndType.set(date, dayEventsByType);
     });
 
+    // Append hoverable rectangles
+    svg.selectAll('.hover-rect')
+      .data(eventsByDayAndType.values())
+      .enter()
+      .append('rect')
+      .attr('class', 'hover-rect')
+      .attr('x', (d, i) => tickPositions[i] - tickWidth / 2)
+      .attr('y', margin.top)
+      .attr('width', tickWidth)
+      .attr('height', y(0) - margin.top)
+      .style('fill', 'transparent')
+      .style('pointer-events', 'all')
+      .on('mouseover', function () {
+        d3.select(this)
+          .style('fill', 'lightgray')
+          .style('cursor', 'pointer')
+        //.style('stroke', '#000000')
+        //.style('stroke-width', 1);
+      })
+      .on('mouseout', function () { d3.select(this).style('fill', 'transparent').style('stroke-width', 0); });
+
     // Define a color scale for different event types
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
     console.log('eventsByDayAndType', eventsByDayAndType)
-    // Calculate the average width between ticks for more accurate positioning
 
+    // Append a tooltip container to the body
+    const tooltip = d3.select('body').append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+      .style('position', 'absolute')
+      .style('text-align', 'center')
+      .style('padding', '2px')
+      .style('background', 'white')
+      .style('border', '0px')
+      .style('border-radius', '8px')
+      .style('pointer-events', 'none')
+      .style('z-index', '10'); // Ensure tooltip is above other elements
 
     eventsByDayAndType.forEach((dayEvents, date) => {
-      let cumulativeCount = 0;
-
+      let count_acc = 0;
       dayEvents.forEach((count: number, eventType: string) => {
         // Compute the center position for each circle
-        const circleX = x(new Date(date.split('-').reverse().join('-'))) + offset
-        const circleY = y(cumulativeCount + count / 2);
+        const radius = (count > 5) ? ((count < 15) ? count : 15) : 5;
+        const circleX = x(new Date(date.split('-').reverse().join('-'))) + offset;
+        const circleY = y(count) - count_acc;
 
-        svg.append('circle')
-          .attr('cx', circleX)
-          .attr('cy', circleY)
-          .attr('r', 5)
-          .attr('fill', colorScale(eventType))
-          .attr('stroke', '#000000')
-          .attr('stroke-width', 1);
+        const circle = svg.append('circle');
+        if (this.viewMode === 'basic') {
+          circle.attr('cx', circleX)
+            .attr('cy', circleY - radius)
+            .attr('r', radius)
+            .attr('fill', colorScale(eventType))
+            .attr('stroke', '#000000')
+            .attr('stroke-width', 1);
+        }
 
-        cumulativeCount += count;
+        // Show tooltip on mouseover
+        circle.on('mouseover', (event, d) => {
+          circle.style('cursor', 'pointer');
+          if (this.viewMode === 'basic')
+            circle.style('fill', 'lightgray');
+
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', .9);
+
+          tooltip.html(this.getTooltipContent(eventType, this.viewMode))
+            .style('left', (event.pageX) + 'px')
+            .style('top', (event.pageY - 28) + 'px');
+        })
+          .on('mouseout', (d) => {
+            circle.style('cursor', 'default')
+              .style('fill', colorScale(eventType));
+
+            tooltip.transition()
+              .duration(500)
+              .style('opacity', 0);
+          });
+
+        const detailed_circle_img = svg.append('svg:image')
+        // if viewMode is detailed, circle should contain the image of the event type (icon) in a circle
+        if (this.viewMode === 'detailed') {
+          const radius = 20;
+          detailed_circle_img
+            .attr('xlink:href', `assets/icons_war/${eventType}`)
+            .attr('x', circleX - (radius / 2))
+            .attr('y', circleY - radius)
+            .attr('width', radius)
+            .attr('height', radius);
+        }
+        count_acc += 10;
+        detailed_circle_img.on('mouseover', (event, d) => {
+          detailed_circle_img.style('cursor', 'pointer');
+
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', .9);
+
+          tooltip.html(this.getTooltipContent(eventType, this.viewMode))
+            .style('left', (event.pageX) + 'px')
+            .style('top', (event.pageY - 28) + 'px');
+        })
+          .on('mouseout', (d) => {
+            detailed_circle_img.style('cursor', 'default')
+            tooltip.transition()
+              .duration(500)
+              .style('opacity', 0);
+          });
       });
     });
   }
@@ -264,6 +331,7 @@ export class ConflictPannelComponent implements AfterViewInit {
     this.updateMapSelectedPeriod();
     this.changeViewMode(this.viewMode);
   }
+  
   /**
   * Change the view mode
   * @param viewMode 
@@ -276,6 +344,17 @@ export class ConflictPannelComponent implements AfterViewInit {
     d3.select('#period-selector-legend').select('.period-selector-legend-svg').remove();
     if (this.viewMode === 'basic') {
       this.createLegend();
+    }
+  }
+
+  // Method to get the content for the tooltip
+  private getTooltipContent(eventType: string, viewMode: string): string {
+    if (viewMode === 'basic') {
+      // Return detailed event information for 'basic' viewMode
+      return `Detailed Info: ${eventType}`;
+    } else {
+      // Return general information for 'detailed' viewMode
+      return `Event Type: ${eventType}`;
     }
   }
 }
