@@ -15,7 +15,6 @@ export class ConflictPannelComponent implements AfterViewInit {
   selectedDateFormat: any = d3.timeFormat('%d %b.');
   eventsByDate = new Map(); // Map Containing the list of events by dates
   eventsBySelectedPeriod = new Map(); // Map Containing the list of events by dates on the selected period
-  viewMode = 'basic'; // (basic | detailed) : basic = only UA,RU,NEUTRAL, detailed = all types
   eventTypes: string[] = [];
   // Date pickers
   pickerStart: any;
@@ -38,11 +37,16 @@ export class ConflictPannelComponent implements AfterViewInit {
 
     // Calculate the last 30 days period
     // get the last event date in the array with
-    const lastEventDate = this.events[500].date; // Random event date for now
+    let lastEventDate: any = this.events[0].date;
+    this.events.forEach((event: any) => {
+      if (event.date > lastEventDate) {
+        lastEventDate = event.date;
+      }
+    });
     const lastMonth = new Date(lastEventDate);
     lastMonth.setDate(lastEventDate.getDate() - 31);
     this.selectedPeriod = [lastMonth, lastEventDate];
-    this.startDate = lastMonth;
+    this.startDate = this.events[0].date;
     this.endDate = lastEventDate;
     // Create a Map with the list of events by date
     this.events.forEach((event: any) => {
@@ -70,17 +74,8 @@ export class ConflictPannelComponent implements AfterViewInit {
   ngAfterViewInit() {
     console.log('conflict pannel after view init');
     this.createChart();
-    if (this.viewMode === 'basic')
-      this.createLegend();
-
-    /** Updating events when changed */
-    /*this.conflictsService.selectedEvents$.subscribe((selectedEvents: any) => {
-      this.eventsBySelectedPeriod = selectedEvents;
-      this.updateMapSelectedPeriod();
-      console.log('Events by eventsBySelectedPeriod in subscribe:', this.eventsBySelectedPeriod);
-    });
-    */
-
+    //if (this.viewMode === 'basic')
+    this.createLegend();
   }
 
   /**
@@ -88,7 +83,7 @@ export class ConflictPannelComponent implements AfterViewInit {
    */
   private updateMapSelectedPeriod() {
     // Create a Map with the list of events by date for the selected period
-
+    this.eventsBySelectedPeriod.clear();
     const list_days_in_period = d3.timeDay.range(this.selectedPeriod[0], this.selectedPeriod[1]);
     list_days_in_period.forEach((date: any) => {
       const transformedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
@@ -113,21 +108,21 @@ export class ConflictPannelComponent implements AfterViewInit {
     const selected_events: any = this.events.filter((d: any) => d.date >= this.selectedPeriod[0] && d.date <= this.selectedPeriod[1]);
     const min_max_date: any = d3.extent(selected_events, (d: any) => d.date);
 
-    const x = d3.scaleTime()
+    let x = d3.scaleTime()
       .domain(min_max_date)
       .range([margin.left, width - margin.right]);
 
-    const svg = d3.select('#period-selector')
+    let svg = d3.select('#period-selector')
       .append('svg')
       .attr('width', width)
       .attr('height', height)
       .attr('class', 'period-selector-svg');
 
-    const xAxis: any = d3.axisBottom(x)
+    let xAxis: any = d3.axisBottom(x)
       .ticks(d3.timeDay, 1)
       .tickFormat(this.selectedDateFormat);
 
-    const gX = svg.append('g')
+    let gX = svg.append('g')
       .attr('transform', `translate(0, ${height - margin.bottom})`)
       .call(xAxis);
 
@@ -149,9 +144,6 @@ export class ConflictPannelComponent implements AfterViewInit {
       .domain([0, max_number_events_per_day + 10])
       .range([height - margin.bottom, margin.top]);
 
-    // Adjust circles to be approximately centered between the ticks
-    const numDates = selected_events.length;
-    const offset = (width) / (numDates * 2); // Calculate an offset to center the circles
     // Create a list of event types
     this.eventTypes = [];
     // Process data to group and count events by type for each day
@@ -162,16 +154,21 @@ export class ConflictPannelComponent implements AfterViewInit {
       events[0].forEach((event: any) => {
         // if the event type is not in the map, add it
         let type = event.icon;
-        if (this.viewMode === 'basic') {
-          // If type contains 'UA' replace by UA, if contains 'RU' replace by RU, else NEUTRAL
-          if (type.includes('UA')) {
-            type = 'UA';
-          } else if (type.includes('RU')) {
-            type = 'RU';
-          } else {
-            type = 'NEUTRAL';
-          }
+        // If type contains 'UA' replace by UA, if contains 'RU' replace by RU, else NEUTRAL
+        if (type.includes('UA')) {
+          type = 'UA';
+        } else if (type.includes('RU')) {
+          type = 'RU';
+        } else if (type.includes('NATO')) {
+          type = 'NATO';
         }
+        else if (type.includes('NEUTRAL')) {
+          type = 'NEUTRAL';
+        }
+        else {
+          type = 'OTHER';
+        }
+
         if (!dayEventsByType.get(type)) {
           dayEventsByType.set(type, 0);
           this.eventTypes.push(type);
@@ -183,26 +180,7 @@ export class ConflictPannelComponent implements AfterViewInit {
       eventsByDayAndType.set(date, dayEventsByType);
     });
 
-    // Append hoverable rectangles
-    svg.selectAll('.hover-rect')
-      .data(eventsByDayAndType.values())
-      .enter()
-      .append('rect')
-      .attr('class', 'hover-rect')
-      .attr('x', (d, i) => tickPositions[i] - tickWidth / 2)
-      .attr('y', margin.top)
-      .attr('width', tickWidth)
-      .attr('height', y(0) - margin.top)
-      .style('fill', 'transparent')
-      .style('pointer-events', 'all')
-      .on('mouseover', function () {
-        d3.select(this)
-          .style('fill', 'lightgray')
-          .style('cursor', 'pointer')
-        //.style('stroke', '#000000')
-        //.style('stroke-width', 1);
-      })
-      .on('mouseout', function () { d3.select(this).style('fill', 'transparent').style('stroke-width', 0); });
+    this.updateDetailedViewSelection(eventsByDayAndType);
 
     // Define a color scale for different event types
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
@@ -221,79 +199,118 @@ export class ConflictPannelComponent implements AfterViewInit {
       .style('pointer-events', 'none')
       .style('z-index', '10'); // Ensure tooltip is above other elements
 
-    eventsByDayAndType.forEach((dayEvents, date) => {
-      let count_acc = 0;
-      dayEvents.forEach((count: number, eventType: string) => {
-        // Compute the center position for each circle
-        const radius = (count > 5) ? ((count < 15) ? count : 15) : 5;
-        const circleX = x(new Date(date.split('-').reverse().join('-'))) + offset;
-        const circleY = y(count) - count_acc;
-
-        const circle = svg.append('circle');
-        if (this.viewMode === 'basic') {
-          circle.attr('cx', circleX)
-            .attr('cy', circleY - radius)
-            .attr('r', radius)
-            .attr('fill', colorScale(eventType))
-            .attr('stroke', '#000000')
-            .attr('stroke-width', 1);
-        }
-
-        // Show tooltip on mouseover
-        circle.on('mouseover', (event, d) => {
-          circle.style('cursor', 'pointer');
-          if (this.viewMode === 'basic')
-            circle.style('fill', 'lightgray');
-
-          tooltip.transition()
-            .duration(200)
-            .style('opacity', .9);
-
-          tooltip.html(this.getTooltipContent(eventType, this.viewMode))
-            .style('left', (event.pageX) + 'px')
-            .style('top', (event.pageY - 28) + 'px');
-        })
-          .on('mouseout', (d) => {
-            circle.style('cursor', 'default')
-              .style('fill', colorScale(eventType));
-
-            tooltip.transition()
-              .duration(500)
-              .style('opacity', 0);
-          });
-
-        const detailed_circle_img = svg.append('svg:image')
-        // if viewMode is detailed, circle should contain the image of the event type (icon) in a circle
-        if (this.viewMode === 'detailed') {
-          const radius = 20;
-          detailed_circle_img
-            .attr('xlink:href', `assets/icons_war/${eventType}`)
-            .attr('x', circleX - (radius / 2))
-            .attr('y', circleY - radius)
-            .attr('width', radius)
-            .attr('height', radius);
-        }
-        count_acc += 10;
-        detailed_circle_img.on('mouseover', (event, d) => {
-          detailed_circle_img.style('cursor', 'pointer');
-
-          tooltip.transition()
-            .duration(200)
-            .style('opacity', .9);
-
-          tooltip.html(this.getTooltipContent(eventType, this.viewMode))
-            .style('left', (event.pageX) + 'px')
-            .style('top', (event.pageY - 28) + 'px');
-        })
-          .on('mouseout', (d) => {
-            detailed_circle_img.style('cursor', 'default')
-            tooltip.transition()
-              .duration(500)
-              .style('opacity', 0);
-          });
+    console.log("eventsByDayAndType", eventsByDayAndType)
+    // Transform the data into an array of objects
+    const transformedData: any = Array.from(eventsByDayAndType, ([date, eventsMap]) => {
+      const formattedDate: any = d3.timeParse("%d-%m-%Y")(date); // Adjust date format as needed
+      const eventCounts: any = { date: formattedDate };
+      eventsMap.forEach((count: any, type: any) => {
+        eventCounts[type] = count;
       });
+      return eventCounts;
     });
+
+    // Extract unique event types for stacking
+    console.log("transformedData", transformedData)
+
+    // Extract the keys for stacking (exclude the 'date' key)
+    const keys = this.eventTypes;
+
+    // Create a stack generator
+    const stack = d3.stack()
+      .keys(keys)
+      .order(d3.stackOrderDescending)
+      .offset(d3.stackOffsetNone);
+
+    // Transform the data
+    const series = stack(transformedData);
+    // Find the maximum stack value
+    const maxStackValue: any = d3.max(transformedData, (d: any) => {
+      let total = 0;
+      keys.forEach(key => {
+        total += d[key];
+      });
+      return total;
+    });
+
+    // Adjust the y scale's domain
+    y.domain([0, maxStackValue]);
+    // Assuming x is your time scale and y is your linear scale for counts
+    svg.selectAll(".layer")
+      .data(series)
+      .enter().append("g")
+      .attr("fill", d => colorScale(d.key))
+      .selectAll("rect")
+      .data(d => d)
+      .enter().append("rect")
+      .attr("x", (d: any) => x(d.data.date) + 2.5)
+      .attr("y", d => y(d[1]))
+      .attr("height", d => y(d[0]) - y(d[1]))
+      .attr("width", tickWidth - 5)
+
+    // Create hoverable rectangles
+    const columnGroups = svg.selectAll(".column-group")
+      .data(transformedData)
+      .enter().append('rect')
+      .attr('class', 'hover-rect')
+      .attr('x', (d, i) => tickPositions[i])
+      .attr('y', margin.top)
+      .attr('width', tickWidth)
+      .attr('height', y(0) - margin.top)
+      .style('fill', 'transparent')
+      .style('pointer-events', 'all')
+
+    columnGroups
+      .on("mouseover", function (event, d) {
+        // Highlight the group or show details for the entire date
+        d3.select(this)
+          .style("opacity", 0.7)
+          .style("cursor", "pointer");
+
+        showTooltip(event, d);
+      })
+      .on("mouseout", function () {
+        // Remove highlight
+        d3.select(this).selectAll("rect")
+          .style("opacity", 1)
+          .style("cursor", "default");
+
+        hideTooltip();
+      })
+      .on("click", (event, d) => {
+        this.updateDetailedViewSelection(d);
+      });
+
+    function showTooltip(event: any, data: any) {
+      tooltip
+        .style('opacity', 1)
+        .style('left', (event.pageX + 10) + 'px')
+        .style('top', (event.pageY + 10) + 'px')
+        .html(generateTooltipContent(data));
+    }
+
+    function hideTooltip() {
+      tooltip.style('opacity', 0);
+    }
+
+    function generateTooltipContent(data: any) {
+      let content = `<strong>Date:</strong> ${d3.timeFormat("%Y-%m-%d")(data.date)}<br/>`;
+      console.log("data", data)
+      if (data['NEUTRAL'])
+        content += `<strong>Neutral events:</strong> ${data['NEUTRAL']}<br/>`;
+      if (data['UA'])
+        content += `<strong>Ukrainian events:</strong> ${data['UA']}<br/>`;
+      if (data['RU'])
+        content += `<strong>Russian events:</strong> ${data['RU']}<br/>`;
+      if (data['NATO'])
+        content += `<strong>NATO events:</strong> ${data['NATO']}<br/>`;
+      if (data['OTHER'])
+        content += `<strong>Other events:</strong> ${data['OTHER']}<br/>`;
+      return content;
+    }
   }
+
+
 
   createLegend() {
     this.eventTypes = [...new Set(this.eventTypes)];
@@ -329,32 +346,45 @@ export class ConflictPannelComponent implements AfterViewInit {
     // Update the selectedPeriod with new start and end dates
     this.selectedPeriod = [this.startDate, this.endDate];
     this.updateMapSelectedPeriod();
-    this.changeViewMode(this.viewMode);
+    this.changeViewMode("");
   }
-  
+
   /**
   * Change the view mode
   * @param viewMode 
   */
   public changeViewMode(viewMode: string) {
-    this.viewMode = viewMode;
     d3.select('.period-selector-svg').remove();
     this.updateMapSelectedPeriod();
     this.createChart();
     d3.select('#period-selector-legend').select('.period-selector-legend-svg').remove();
-    if (this.viewMode === 'basic') {
-      this.createLegend();
-    }
+    this.createLegend();
   }
 
   // Method to get the content for the tooltip
   private getTooltipContent(eventType: string, viewMode: string): string {
-    if (viewMode === 'basic') {
-      // Return detailed event information for 'basic' viewMode
-      return `Detailed Info: ${eventType}`;
-    } else {
-      // Return general information for 'detailed' viewMode
-      return `Event Type: ${eventType}`;
+    // Return detailed event information for 'basic' viewMode
+    return `Detailed Info: ${eventType}}`;
+  }
+
+  public detailedSelectedEvents: any = [];
+  public detailedSelectedDate: string = "";
+
+  private updateDetailedViewSelection(data: any) {
+    console.log("data:", data)
+    if (data.date) {
+      const date = `${data.date.getDate()}-${data.date.getMonth() + 1}-${data.date.getFullYear()}`; // transform the date in the format DD-MM-YYYY to string
+      this.detailedSelectedDate = date;
+      this.detailedSelectedEvents = this.eventsByDate.get(this.detailedSelectedDate);
+      console.log("detailedSelectedEvents keys:", this.eventsByDate.keys().next().value)
+      this.conflictsService.setSelectedDetailedEvents(this.detailedSelectedEvents);
+      this.conflictsService.setStartDate(this.selectedPeriod[0]);
+      this.conflictsService.setEndDate(this.selectedPeriod[1]);
+      d3.select('#modal-detailed-view').style('display', 'block');
     }
+  }
+
+  public closeModaleDetailedView(): void {
+    d3.select('#modal-detailed-view').style('display', 'none');
   }
 }

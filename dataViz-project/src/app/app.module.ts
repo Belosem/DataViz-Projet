@@ -20,6 +20,7 @@ import { ConflictPannelComponent } from './components/conflict-pannel/conflict-p
 import { ConflictStatsComponent } from './components/conflict-stats/conflict-stats.component';
 import { ConflictsService } from './services/conflicts.service';
 import { HttpClientModule } from '@angular/common/http';
+import { PieChartEventsComponent } from './components/pie-chart-events/pie-chart-events.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { HttpClientModule } from '@angular/common/http';
     ToolbarComponent,
     ConflictPannelComponent,
     ConflictStatsComponent,
+    PieChartEventsComponent,
   ],
   imports: [
     BrowserModule,

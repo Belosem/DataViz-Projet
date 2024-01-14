@@ -1,16 +1,19 @@
 <div>
   <app-toolbar></app-toolbar>
+  
   <mat-grid-list cols="2" rowHeight="2:1">
     <!--Conflict Map tile -->
     <mat-grid-tile colspan="2" id="conflict-pannel-container">
       <app-conflict-pannel></app-conflict-pannel>
     </mat-grid-tile>
     <!--Conflict Stats tile -->
-    <mat-grid-tile id="conflict-stats-container">
+    <mat-grid-tile id="conflict-map-container">
       <app-conflict-stats></app-conflict-stats>
     </mat-grid-tile>
     <!-- Other -->
-    <mat-grid-tile>3</mat-grid-tile>
+    <mat-grid-tile id="conflict-stats-container">
+      <app-pie-chart-events [parentContainerName]="'#conflict-stats-container'" [dateRange]="[startDate, endDate]" [pieChartData]="detailedSelectedEvents" [regionName]="regionName"></app-pie-chart-events>
+    </mat-grid-tile>
   </mat-grid-list>
 
 </div>
