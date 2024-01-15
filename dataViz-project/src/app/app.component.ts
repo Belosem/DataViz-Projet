@@ -1,5 +1,6 @@
-import { OnInit, Component } from '@angular/core';
+import { OnInit, Component, ViewChild } from '@angular/core';
 import { ConflictsService } from './services/conflicts.service';
+import { } from 'googlemaps';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,9 @@ export class AppComponent implements OnInit {
   public startDate: string = "";
   public endDate: string = "";
   public regionName: string = "World";
+  // Google Map API
+  @ViewChild('map') mapElement: any;
+  map!: google.maps.Map; 
 
   constructor(private conflictService: ConflictsService) { }
 
@@ -31,5 +35,19 @@ export class AppComponent implements OnInit {
     this.conflictService.regionName$.subscribe((region: string) => {
       this.regionName = region;
     });
+  }
+
+  ngAfterViewInit() {
+    this.initMap();
+  }
+  
+  initMap() {
+    // Map properties management
+    const mapProperties = {
+      center: new google.maps.LatLng(35.2271, -80.8431),
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapProperties);
   }
 }

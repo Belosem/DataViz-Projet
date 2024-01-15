@@ -14,6 +14,9 @@
     <mat-grid-tile id="conflict-stats-container">
       <app-pie-chart-events [parentContainerName]="'#conflict-stats-container'" [dateRange]="[startDate, endDate]" [pieChartData]="detailedSelectedEvents" [regionName]="regionName"></app-pie-chart-events>
     </mat-grid-tile>
+    <mat-grid-tile colspan="2">
+      <div #map style="width:100%;height:400px"></div>
+    </mat-grid-tile>
   </mat-grid-list>
 
 </div>

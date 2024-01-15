@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import EventsData from '../../assets/data/events/ukraineConflictEventPoints.json';
 import { BehaviorSubject, retry } from 'rxjs';
+import * as d3 from 'd3';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,8 @@ export class ConflictsService {
   public regionName$: BehaviorSubject<string> = new BehaviorSubject<string>(this.regionName);
 
   public icon_labelsMap: Map<string, string> = new Map([]);
+
+  public eventType_colorsMap: Map<string, string> = new Map([]);
 
   constructor() {
     this.AllEvents = EventsData;
@@ -58,6 +61,53 @@ export class ConflictsService {
         })
         .catch(error => reject(error));
     });
+  }
+
+  public createEventTypeColorsMap(eventTypes: []) {
+    console.log("eventTypes createEventTypeColorsMap :", eventTypes)
+    let eventType_colorsMap: Map<string, string> = new Map([]);
+    const base_colors: string[] = [
+      "#0051CA", // UA
+      "#E00000", // RU
+      "#AC7339", // NEUTRAL
+      "#0A5900", // NATO
+      "#666666" // OTHER
+      ];
+    let color: string = "";
+    eventTypes.forEach((eventType: any) => {
+      console.log("eventType :", eventType)
+      // 3 Base colors : UA, RU, NATO, NEUTRAL, OTHER
+      if (eventType.includes('UA')) {
+        // Create a variant of the base color for UA
+        color = d3.rgb(base_colors[0]).toString();
+      }
+      else if (eventType.includes('RU')) {
+        // Create a variant of the base color for RU
+        color = d3.rgb(base_colors[1]).toString();
+      }
+      else if (eventType.includes('NEUTRAL')) {
+        // Create a variant of the base color for NEUTRAL
+        color = d3.rgb(base_colors[2]).toString();
+      }
+      else if (eventType.includes('NATO')) {
+        // Create a variant of the base color for OTHER
+        color = d3.rgb(base_colors[3]).toString();
+      }
+      else {
+        // Create a variant of the base color for OTHER
+        color = d3.rgb(base_colors[4]).toString();
+      }
+      eventType_colorsMap.set(eventType, color);
+    });
+    this.eventType_colorsMap = eventType_colorsMap;
+    console.log("eventType_colorsMap :", this.eventType_colorsMap)
+
+  }
+
+  public getEventTypeColor(eventType: string) {
+    console.log(eventType, this.eventType_colorsMap.get(eventType));
+    console.log(this.eventType_colorsMap)
+    return this.eventType_colorsMap.get(eventType);
   }
 
   public getAllEvents(): any[] {
@@ -105,7 +155,7 @@ export class ConflictsService {
   }
 
   public getLabelByIcon(icon: string) {
-    if(this.icon_labelsMap.get(icon))
+    if (this.icon_labelsMap.get(icon))
       return this.icon_labelsMap.get(icon)
     else
       return icon;

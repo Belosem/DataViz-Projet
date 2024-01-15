@@ -15,7 +15,7 @@ export class ConflictPannelComponent implements AfterViewInit {
   selectedDateFormat: any = d3.timeFormat('%d %b.');
   eventsByDate = new Map(); // Map Containing the list of events by dates
   eventsBySelectedPeriod = new Map(); // Map Containing the list of events by dates on the selected period
-  eventTypes: string[] = [];
+  eventTypes: any = [];
   // Date pickers
   pickerStart: any;
   pickerEnd: any;
@@ -27,7 +27,6 @@ export class ConflictPannelComponent implements AfterViewInit {
    * @param conflictsService 
    */
   constructor(private conflictsService: ConflictsService) {
-    console.log('conflict pannel constructor');
     this.events = this.conflictsService.getAllEvents().map((event: any) => {
       return {
         ...event,
@@ -72,7 +71,6 @@ export class ConflictPannelComponent implements AfterViewInit {
    * Function executed after the view is initialized
    */
   ngAfterViewInit() {
-    console.log('conflict pannel after view init');
     this.createChart();
     //if (this.viewMode === 'basic')
     this.createLegend();
@@ -93,7 +91,6 @@ export class ConflictPannelComponent implements AfterViewInit {
       this.eventsBySelectedPeriod.get(transformedDate).push(this.eventsByDate.get(transformedDate));
       this.conflictsService.setEventsBySelectedPeriod(this.eventsBySelectedPeriod, this.selectedPeriod[0], this.selectedPeriod[1]);
     });
-    console.log('Events by eventsBySelectedPeriod :', this.eventsBySelectedPeriod);
   }
 
   /**
@@ -139,7 +136,6 @@ export class ConflictPannelComponent implements AfterViewInit {
     }
 
     // Set the y axis
-    console.log("max_number_events_per_day", max_number_events_per_day);
     const y = d3.scaleLinear()
       .domain([0, max_number_events_per_day + 10])
       .range([height - margin.bottom, margin.top]);
@@ -179,12 +175,10 @@ export class ConflictPannelComponent implements AfterViewInit {
       // Add the day to the Map
       eventsByDayAndType.set(date, dayEventsByType);
     });
+    // Create a Map with the list of events by date for the selected period
+    this.conflictsService.createEventTypeColorsMap(this.eventTypes);
 
     this.updateDetailedViewSelection(eventsByDayAndType);
-
-    // Define a color scale for different event types
-    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-    console.log('eventsByDayAndType', eventsByDayAndType)
 
     // Append a tooltip container to the body
     const tooltip = d3.select('body').append('div')
@@ -199,7 +193,6 @@ export class ConflictPannelComponent implements AfterViewInit {
       .style('pointer-events', 'none')
       .style('z-index', '10'); // Ensure tooltip is above other elements
 
-    console.log("eventsByDayAndType", eventsByDayAndType)
     // Transform the data into an array of objects
     const transformedData: any = Array.from(eventsByDayAndType, ([date, eventsMap]) => {
       const formattedDate: any = d3.timeParse("%d-%m-%Y")(date); // Adjust date format as needed
@@ -209,9 +202,6 @@ export class ConflictPannelComponent implements AfterViewInit {
       });
       return eventCounts;
     });
-
-    // Extract unique event types for stacking
-    console.log("transformedData", transformedData)
 
     // Extract the keys for stacking (exclude the 'date' key)
     const keys = this.eventTypes;
@@ -227,7 +217,7 @@ export class ConflictPannelComponent implements AfterViewInit {
     // Find the maximum stack value
     const maxStackValue: any = d3.max(transformedData, (d: any) => {
       let total = 0;
-      keys.forEach(key => {
+      keys.forEach((key: any) => {
         total += d[key];
       });
       return total;
@@ -239,7 +229,13 @@ export class ConflictPannelComponent implements AfterViewInit {
     svg.selectAll(".layer")
       .data(series)
       .enter().append("g")
-      .attr("fill", d => colorScale(d.key))
+      .attr("fill", (d: any) => {
+        const c_ = (this.conflictsService.getEventTypeColor(d.key));
+        if (c_ === undefined)
+          return "#000000";
+        else
+          return c_;
+      })
       .selectAll("rect")
       .data(d => d)
       .enter().append("rect")
@@ -295,7 +291,6 @@ export class ConflictPannelComponent implements AfterViewInit {
 
     function generateTooltipContent(data: any) {
       let content = `<strong>Date:</strong> ${d3.timeFormat("%Y-%m-%d")(data.date)}<br/>`;
-      console.log("data", data)
       if (data['NEUTRAL'])
         content += `<strong>Neutral events:</strong> ${data['NEUTRAL']}<br/>`;
       if (data['UA'])
@@ -332,7 +327,13 @@ export class ConflictPannelComponent implements AfterViewInit {
       .attr('x', 18)
       .attr('width', 18)
       .attr('height', 18)
-      .style('fill', (d: any) => d3.schemeCategory10[this.eventTypes.indexOf(d)]);
+      .style('fill', (d: any) => {
+        const c_ = (this.conflictsService.getEventTypeColor(d));
+        if (c_ === undefined)
+          return "#000000";
+        else
+          return c_;
+      });
 
     legend.append('text')
       .attr('x', 40)
@@ -371,12 +372,10 @@ export class ConflictPannelComponent implements AfterViewInit {
   public detailedSelectedDate: string = "";
 
   private updateDetailedViewSelection(data: any) {
-    console.log("data:", data)
     if (data.date) {
       const date = `${data.date.getDate()}-${data.date.getMonth() + 1}-${data.date.getFullYear()}`; // transform the date in the format DD-MM-YYYY to string
       this.detailedSelectedDate = date;
       this.detailedSelectedEvents = this.eventsByDate.get(this.detailedSelectedDate);
-      console.log("detailedSelectedEvents keys:", this.eventsByDate.keys().next().value)
       this.conflictsService.setSelectedDetailedEvents(this.detailedSelectedEvents);
       this.conflictsService.setStartDate(this.selectedPeriod[0]);
       this.conflictsService.setEndDate(this.selectedPeriod[1]);

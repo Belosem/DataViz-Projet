@@ -22,6 +22,7 @@ import { ConflictsService } from './services/conflicts.service';
 import { HttpClientModule } from '@angular/common/http';
 import { PieChartEventsComponent } from './components/pie-chart-events/pie-chart-events.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

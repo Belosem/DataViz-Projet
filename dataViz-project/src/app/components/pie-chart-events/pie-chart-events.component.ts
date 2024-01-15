@@ -10,9 +10,10 @@ import { ConflictsService } from 'src/app/services/conflicts.service';
 export class PieChartEventsComponent implements OnChanges {
   @Input() public pieChartData: any = [];
   @Input() public dateRange: any;
+  @Input() public selectedDate : string = "";
   @Input() public regionName: string | null = "";
   @Input() public parentContainerName : string = "";
-
+  public periodFormat: any = d3.timeFormat('%d %b. %Y');
   constructor(private conflictService: ConflictsService) { }
 
   ngOnChanges() {
@@ -48,8 +49,8 @@ export class PieChartEventsComponent implements OnChanges {
       .innerRadius(radius * 0.4);
 
     const outerArc = d3.arc()
-      .innerRadius(radius * 0.9)
-      .outerRadius(radius * 0.9);
+      .innerRadius(radius * 0.95)
+      .outerRadius(radius * 0.95);
 
     // Prepare groups
     const svg = d3.select('#pie-chart-container')
@@ -71,7 +72,26 @@ export class PieChartEventsComponent implements OnChanges {
 
     const key = (d: any) => d.data.name;
     // Set up the color scale
-    const color_range: string[] = this.set_color_range(pieData);
+    const color_range: string[] = []
+    pieData.forEach((element: any) => {
+      let type = element.name;
+      if(type.includes('UA')) 
+        type = 'UA';
+      else if(type.includes('RU'))
+        type = 'RU';
+      else if(type.includes('NEUTRAL'))
+        type = 'NEUTRAL';
+      else if(type.includes('NATO'))
+        type = 'NATO';
+      else if(type.includes('OTHER'))
+        type = 'OTHER';
+      else
+        type = 'OTHER';
+      const color = this.conflictService.getEventTypeColor(type);
+      console.log("color :", color);
+      (color) ? color_range.push(color) : "#000000";
+    });
+
     const color: any = d3.scaleOrdinal()
       .domain(pieData)
       .range(color_range);
@@ -156,7 +176,18 @@ export class PieChartEventsComponent implements OnChanges {
       .attr("class", "slice")
       .merge(slice) // Merge enter and update selections
       .transition().duration(1000)
-      .attrTween("d", (d: any) => arcTween(d, arc));
+      .attrTween("d", (d: any) => arcTween(d, arc))
+      .attr("stroke", "white");
+
+    slice.on("mouseover", (d: any) => {
+      slice.attr("fill-opacity", "0.3")
+      .attr("stroke-opacity", "0.3");
+    })
+    .on("mouseout", (d: any) => {
+      slice.attr("fill-opacity", "1")
+      .attr("stroke-opacity", "1");
+    }
+    )      
 
     slice.exit().remove();
 
@@ -181,7 +212,7 @@ export class PieChartEventsComponent implements OnChanges {
         const interpolate = d3.interpolate(current, a);
         const d2 = interpolate(t);
         const pos = outerArc.centroid(d2);
-        pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+        pos[0] = radius * 0.98 * (midAngle(d2) < Math.PI ? 1 : -1);
         return [arc.centroid(d2), outerArc.centroid(d2), pos];
       };
     };
