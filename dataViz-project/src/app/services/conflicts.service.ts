@@ -31,7 +31,6 @@ export class ConflictsService {
   constructor() {
     this.AllEvents = EventsData;
     this.createIconLabelsMap().then(icon_labelsMap => {
-      console.log("icon_labelsMap", icon_labelsMap);
       this.icon_labelsMap = icon_labelsMap;
     }).catch(error => {
       console.error("Error loading the file:", error);
@@ -64,7 +63,6 @@ export class ConflictsService {
   }
 
   public createEventTypeColorsMap(eventTypes: []) {
-    console.log("eventTypes createEventTypeColorsMap :", eventTypes)
     let eventType_colorsMap: Map<string, string> = new Map([]);
     const base_colors: string[] = [
       "#0051CA", // UA
@@ -75,7 +73,6 @@ export class ConflictsService {
       ];
     let color: string = "";
     eventTypes.forEach((eventType: any) => {
-      console.log("eventType :", eventType)
       // 3 Base colors : UA, RU, NATO, NEUTRAL, OTHER
       if (eventType.includes('UA')) {
         // Create a variant of the base color for UA
@@ -100,13 +97,10 @@ export class ConflictsService {
       eventType_colorsMap.set(eventType, color);
     });
     this.eventType_colorsMap = eventType_colorsMap;
-    console.log("eventType_colorsMap :", this.eventType_colorsMap)
 
   }
 
   public getEventTypeColor(eventType: string) {
-    console.log(eventType, this.eventType_colorsMap.get(eventType));
-    console.log(this.eventType_colorsMap)
     return this.eventType_colorsMap.get(eventType);
   }
 
@@ -116,6 +110,8 @@ export class ConflictsService {
 
   public setEventsBySelectedPeriod(events: Map<any, any>, startDate: string, endDate: string): void {
     this.selectedEvents$.next(events);
+    this.startDate$.next(startDate);
+    this.endDate$.next(endDate);
   }
 
   public getSelectedEvents(): Map<any, any> {

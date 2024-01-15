@@ -14,6 +14,7 @@ export class PieChartEventsComponent implements OnChanges {
   @Input() public regionName: string | null = "";
   @Input() public parentContainerName : string = "";
   public periodFormat: any = d3.timeFormat('%d %b. %Y');
+  
   constructor(private conflictService: ConflictsService) { }
 
   ngOnChanges() {
@@ -29,7 +30,6 @@ export class PieChartEventsComponent implements OnChanges {
 
     // Prepare the data for D3's pie function
     const pieData: any = Array.from(eventsByType, ([name, events]) => ({ name, events }));
-    console.log("ngOnChanges pieData:", pieData);
 
     // Remove previous svg
     d3.select('#pie-chart-container').selectAll('svg').remove();
@@ -88,7 +88,6 @@ export class PieChartEventsComponent implements OnChanges {
       else
         type = 'OTHER';
       const color = this.conflictService.getEventTypeColor(type);
-      console.log("color :", color);
       (color) ? color_range.push(color) : "#000000";
     });
 

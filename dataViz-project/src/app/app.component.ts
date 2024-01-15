@@ -1,6 +1,7 @@
 import { OnInit, Component, ViewChild } from '@angular/core';
 import { ConflictsService } from './services/conflicts.service';
 import { } from 'googlemaps';
+import { style } from 'd3';
 
 @Component({
   selector: 'app-root',
@@ -15,13 +16,14 @@ export class AppComponent implements OnInit {
   public regionName: string = "World";
   // Google Map API
   @ViewChild('map') mapElement: any;
-  map!: google.maps.Map; 
+  map!: google.maps.Map;
 
   constructor(private conflictService: ConflictsService) { }
 
   ngOnInit() {
     this.conflictService.selectedDetailedEvents$.subscribe((events: any) => {
       this.detailedSelectedEvents = events;
+      this.initMap();
     });
 
     this.conflictService.startDate$.subscribe((date: string) => {
@@ -40,14 +42,78 @@ export class AppComponent implements OnInit {
   ngAfterViewInit() {
     this.initMap();
   }
+
+  async addMarker(event: any) {
+    const marker = new google.maps.Marker({
+      position: new google.maps.LatLng(event.latitude, event.longitude),
+      map: this.map,
+      title: event.event_type,
+      icon: this.getMarkerIcon(event.icon),
+    });
+    // add info window to marker
+    const infoWindow = new google.maps.InfoWindow({
+      content: await this.getInfoWindowContent(event),
+    });
+    marker.addListener("click", () => {
+      infoWindow.open(this.map, marker);
+    });
+  }
+
+  async getInfoWindowContent(event: any) {
+    // request API to get info on the event
+    const url = "https://geoconfirmed.org/api/placemark/Ukraine/" + event.id;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data);
   
+      const description = data.description;
+      let originalSource = data.originalSource;
+  
+      // Regular expression to match URLs
+      const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
+  
+      // Replace URLs with anchor tags
+      originalSource = originalSource.replace(urlRegex, function(url : string) {
+        return `<a href="${url}" target="_blank">${url}</a>`;
+      });
+  
+      return `
+        <div class="info-window">
+          <h2>${this.conflictService.getLabelByIcon(event.icon)}</h2>
+          <p><strong>Location:</strong> ${event.latitude}, ${event.longitude}</p>
+          <p><strong>Description:</strong> ${description}</p>
+          <p><strong>Original source:</strong> ${originalSource}</p>
+        </div>
+      `;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return `
+        <div class="info-window">
+          <h2>${this.conflictService.getLabelByIcon(event.icon)}</h2>
+          <p><strong>Location:</strong> ${event.latitude}, ${event.longitude}</p>
+          <p>Error loading additional information.</p>
+        </div>
+      `;
+    }
+  }
+
+  getMarkerIcon(eventType: string) {
+    return "assets/iconsWar/" + eventType
+  };
+
   initMap() {
     // Map properties management
     const mapProperties = {
-      center: new google.maps.LatLng(35.2271, -80.8431),
-      zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      center: new google.maps.LatLng(49.9946954, 36.12102),
+      zoom: 5,
+      mapTypeId: google.maps.MapTypeId.TERRAIN,
+      trafficLayer: false,
     };
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapProperties);
+    // add coordinates to map
+    this.detailedSelectedEvents.forEach((event: any) => {
+      this.addMarker(event);
+    });
   }
 }

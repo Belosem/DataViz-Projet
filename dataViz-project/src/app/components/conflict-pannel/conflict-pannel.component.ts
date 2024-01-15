@@ -57,10 +57,14 @@ export class ConflictPannelComponent implements AfterViewInit {
       }
       this.eventsByDate.get(transformedDate).push(event);
     });
-
     this.updateMapSelectedPeriod();
   }
 
+  /**
+   * TODO: Filtering for only available dates
+   * @param d 
+   * @returns 
+   */
   dateSelectionFilter = (d: Date): boolean => {
     const day = d.getDay();
     // Prevent Saturday and Sunday from being selected.
@@ -71,6 +75,7 @@ export class ConflictPannelComponent implements AfterViewInit {
    * Function executed after the view is initialized
    */
   ngAfterViewInit() {
+    this.conflictsService.setEventsBySelectedPeriod(this.eventsBySelectedPeriod, this.selectedPeriod[0], this.selectedPeriod[1]);
     this.createChart();
     //if (this.viewMode === 'basic')
     this.createLegend();
@@ -89,8 +94,8 @@ export class ConflictPannelComponent implements AfterViewInit {
         this.eventsBySelectedPeriod.set(transformedDate, []);
       }
       this.eventsBySelectedPeriod.get(transformedDate).push(this.eventsByDate.get(transformedDate));
-      this.conflictsService.setEventsBySelectedPeriod(this.eventsBySelectedPeriod, this.selectedPeriod[0], this.selectedPeriod[1]);
     });
+    this.conflictsService.setEventsBySelectedPeriod(this.eventsBySelectedPeriod, this.selectedPeriod[0], this.selectedPeriod[1]);
   }
 
   /**
@@ -303,9 +308,9 @@ export class ConflictPannelComponent implements AfterViewInit {
         content += `<strong>Other events:</strong> ${data['OTHER']}<br/>`;
       return content;
     }
+
+    this.updateDetailedViewSelection(transformedData);
   }
-
-
 
   createLegend() {
     this.eventTypes = [...new Set(this.eventTypes)];

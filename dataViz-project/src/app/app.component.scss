@@ -1,8 +1,32 @@
 mat-grid-tile {
-    background: rgb(177, 177, 177);
-    border: 1px solid rgb(177, 177, 177);
-  }
+  background: rgb(177, 177, 177);
+  border: 1px solid rgb(177, 177, 177);
+}
 
-#conflict-pannel-container, #conflict-stats-container, #conflict-map-container {
+#conflict-pannel-container,
+#conflict-stats-container,
+#conflict-map-container {
   background: white;
+}
+
+.map-container.hidden {
+  visibility: hidden;
+
+}
+
+.title-container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+}
+
+.title-container p {
+  margin: 10px 0;
+  white-space: nowrap;
 }

@@ -1,6 +1,6 @@
 <div>
   <app-toolbar></app-toolbar>
-  
+
   <mat-grid-list cols="2" rowHeight="2:1">
     <!--Conflict Map tile -->
     <mat-grid-tile colspan="2" id="conflict-pannel-container">
@@ -8,15 +8,23 @@
     </mat-grid-tile>
     <!--Conflict Stats tile -->
     <mat-grid-tile id="conflict-map-container">
-      <app-conflict-stats></app-conflict-stats>
+      <div *ngIf="detailedSelectedEvents.length <= 0" class="title-container">
+        <p>Aucune date séléctionnée</p>
+      </div>
+      <div #map class="map-container" [style.visibility]="detailedSelectedEvents.length === 0 ? 'hidden' : 'visible'"
+        style="width:100%;height:100%;"></div>
     </mat-grid-tile>
+
     <!-- Other -->
     <mat-grid-tile id="conflict-stats-container">
-      <app-pie-chart-events [parentContainerName]="'#conflict-stats-container'" [dateRange]="[startDate, endDate]" [pieChartData]="detailedSelectedEvents" [regionName]="regionName"></app-pie-chart-events>
+      <app-pie-chart-events [parentContainerName]="'#conflict-stats-container'" [dateRange]="[startDate, endDate]"
+        [pieChartData]="detailedSelectedEvents" [regionName]="regionName"></app-pie-chart-events>
     </mat-grid-tile>
+    <!--
     <mat-grid-tile colspan="2">
-      <div #map style="width:100%;height:400px"></div>
+      <app-conflict-stats></app-conflict-stats>
     </mat-grid-tile>
+  -->
   </mat-grid-list>
 
 </div>
