@@ -39,7 +39,13 @@ def main():
         if item['icon'] not in list_icon_uniq:
             list_icon_uniq.append(item['icon'])
 
+    # Create JSON file with icons names
+    with open('icons.json', 'w') as file:
+        # sort list by name
+        list_icon_uniq.sort()
+        json.dump(list_icon_uniq, file)
     # Download icons from the list to the icons folder
+    """
     for icon in list_icon_uniq:
         url = f"https://cdn.geoconfirmed.org/geoconfirmed/icons/Ukraine/{icon}"
         response = requests.get(url)
@@ -48,6 +54,7 @@ def main():
                 file.write(response.content)
         else:
             print(f"Failed to get icon {icon}")
+            """
 
 if __name__ == "__main__":
     main()

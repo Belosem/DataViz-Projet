@@ -13,6 +13,8 @@ export class PieChartEventsComponent implements OnChanges {
   @Input() public regionName: string | null = "";
   @Input() public parentContainerName : string = "";
 
+  constructor(private conflictService: ConflictsService) { }
+
   ngOnChanges() {
     // Data cleaning
     const eventsByType: Map<string, []> = this.pieChartData.reduce((map: any, event: any) => {
@@ -77,11 +79,11 @@ export class PieChartEventsComponent implements OnChanges {
     this.change(svg, pieData, pie, arc, outerArc, key, color, radius);
   }
 
-  private set_color_range(pieData: any): string[] {
-    // 3 Base colors : UA, RU, NEUTRAL
-    const base_colors: string[] = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"];
+  private set_color_range(data: any): string[] {
+    // 3 Base colors : UA, RU, NATO, NEUTRAL, OTHER
+    const base_colors: string[] = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"];
     const color_range: string[] = [];
-    pieData.forEach((element: any) => {
+    data.forEach((element: any) => {
       if (element.name.includes('UA')) {
         // Create a variant of the base color for UA
         const color = d3.rgb(base_colors[0]).toString();
@@ -97,15 +99,21 @@ export class PieChartEventsComponent implements OnChanges {
         const color = d3.rgb(base_colors[2]).toString();
         color_range.push(color);
       }
-      else {
+      else if (element.name.includes('NATO')) {
         // Create a variant of the base color for OTHER
         const color = d3.rgb(base_colors[3]).toString();
+        color_range.push(color);
+      }
+      else {
+        // Create a variant of the base color for OTHER
+        const color = d3.rgb(base_colors[4]).toString();
         color_range.push(color);
       }
     });
     return color_range;
   }
 
+  // inspired by https://gist.github.com/dbuezas/9306799
   private change(svg: any, pieData: any, pie: any, arc: any, outerArc: any, key: any, color: any, radius: any) {
     const arcTween = (a: any, arcGenerator: any) => {
       const current = { ...a };
@@ -118,7 +126,6 @@ export class PieChartEventsComponent implements OnChanges {
     // Define a function to calculate the mid-angle of a slice
     const midAngle = (d: any) => d.startAngle + (d.endAngle - d.startAngle) / 2;
 
-    // TEXT LABELS
     const textTween = (a: any) => {
       const current = { ...a };
       return (t: any) => {
@@ -139,7 +146,6 @@ export class PieChartEventsComponent implements OnChanges {
       };
     };
 
-    /* ------- PIE SLICES -------*/
     const slice = svg.select(".slices")
       .selectAll("path.slice")
       .data(pie(pieData), key);
@@ -161,7 +167,7 @@ export class PieChartEventsComponent implements OnChanges {
     text.enter()
       .append("text")
       .attr("dy", ".35em")
-      .text((d : any) => d.data.name)
+      .text((d : any) => this.conflictService.getLabelByIcon(d.data.name))
       .merge(text) // Merge enter and update selections
       .transition().duration(1000)
       .attrTween("transform", (d : any) => textTween(d))
@@ -169,7 +175,6 @@ export class PieChartEventsComponent implements OnChanges {
 
     text.exit().remove();
 
-    // SLICE TO TEXT POLYLINES
     const polylineTween = (a: any) => {
       const current = { ...a };
       return (t: any) => {
