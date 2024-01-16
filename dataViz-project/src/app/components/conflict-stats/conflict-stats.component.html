@@ -1,7 +1,9 @@
-<div class="select-container">
-    <select [(ngModel)]="selectedCountry" (change)="onCountryChange()">
-        <option *ngFor="let country of countries" [value]="country.value">{{ country.label }}</option>
-    </select>
+<div>
+    <div class="select-container">
+        <select [(ngModel)]="selectedCountry" (change)="onCountryChange()">
+            <option *ngFor="let country of countries" [value]="country.value">{{ country.label }}</option>
+        </select>
+    </div>
+    <div id="google-map-container"></div>
+    <div id="map-container"></div>
 </div>
-
-<div id="map-container"></div>
