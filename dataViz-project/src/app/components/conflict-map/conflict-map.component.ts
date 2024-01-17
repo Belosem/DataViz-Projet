@@ -1,21 +1,17 @@
-import { OnInit, Component, ViewChild } from '@angular/core';
-import { ConflictsService } from './services/conflicts.service';
-import { } from 'googlemaps';
-import * as d3 from 'd3';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewChildren, ViewRef } from '@angular/core';
+import { ConflictsService } from 'src/app/services/conflicts.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-conflict-map',
+  templateUrl: './conflict-map.component.html',
+  styleUrls: ['./conflict-map.component.scss']
 })
-export class AppComponent implements OnInit {
-  title = 'dataViz-project';
+export class ConflictMapComponent implements OnInit, AfterViewInit{
   public detailedSelectedEvents: any = [];
   public startDate: string = "";
   public endDate: string = "";
   public regionName: string = "World";
   public selectedDate: string = "";
-  public selectedPeriodFormat: any = d3.timeFormat('%d %b. %Y');
   // Google Map API
   @ViewChild('map') mapElement: any;
   map!: google.maps.Map;
@@ -25,15 +21,15 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.conflictService.selectedDetailedEvents$.subscribe((events: any) => {
       this.detailedSelectedEvents = events;
-      if(this.detailedSelectedEvents.length > 0) {
+      if (this.detailedSelectedEvents.length > 0) {
         this.detailedSelectedEvents.forEach((event: any) => {
-          if(this.startDate < event.date) {
+          if (this.startDate < event.date) {
             this.startDate = event.date;
           }
-          if(this.endDate > event.date) {
+          if (this.endDate > event.date) {
             this.endDate = event.date;
           }
-          if(this.startDate == this.endDate) {
+          if (this.startDate == this.endDate) {
             this.selectedDate = this.startDate;
           }
           else {
@@ -41,7 +37,7 @@ export class AppComponent implements OnInit {
           }
         });
       }
-      this.initMap();
+      //this.initMap();
     });
 
     this.conflictService.startDate$.subscribe((date: string) => {
@@ -84,18 +80,18 @@ export class AppComponent implements OnInit {
       const response = await fetch(url);
       const data = await response.json();
       console.log(data);
-  
+
       const description = data.description;
       let originalSource = data.originalSource;
-  
+
       // Regular expression to match URLs
       const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|?])/ig;
-  
+
       // Replace URLs with anchor tags
-      originalSource = originalSource.replace(urlRegex, function(url : string) {
+      originalSource = originalSource.replace(urlRegex, function (url: string) {
         return `<a href="${url}" target="_blank">${url}</a>`;
       });
-  
+
       return `
         <div class="info-window">
           <h2>${this.conflictService.getLabelByIcon(event.icon)}</h2>

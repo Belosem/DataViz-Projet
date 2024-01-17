@@ -17,12 +17,12 @@
 
     <!-- Other -->
     <mat-grid-tile id="conflict-stats-container">
-      <app-pie-chart-events [parentContainerName]="'#conflict-stats-container'" [dateRange]="[startDate, endDate]"
+      <app-pie-chart-events [parentContainerName]="'#conflict-stats-container'" [dateRange]="[startDate, endDate]" [selectedDate]="selectedDate"
         [pieChartData]="detailedSelectedEvents" [regionName]="regionName"></app-pie-chart-events>
     </mat-grid-tile>
     <!--
     <mat-grid-tile colspan="2">
-      <app-conflict-stats></app-conflict-stats>
+      <app-conflict-map></app-conflict-map>
     </mat-grid-tile>
   -->
   </mat-grid-list>

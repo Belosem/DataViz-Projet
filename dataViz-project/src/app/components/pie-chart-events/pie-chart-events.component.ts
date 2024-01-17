@@ -18,6 +18,9 @@ export class PieChartEventsComponent implements OnChanges {
   constructor(private conflictService: ConflictsService) { }
 
   ngOnChanges() {
+    // Change date format
+    this.selectedDate = this.periodFormat(new Date(this.selectedDate));
+    this.dateRange = [this.periodFormat(new Date(this.dateRange[0])), this.periodFormat(new Date(this.dateRange[1]))];
     // Data cleaning
     const eventsByType: Map<string, []> = this.pieChartData.reduce((map: any, event: any) => {
       const key = event.icon;
@@ -96,40 +99,6 @@ export class PieChartEventsComponent implements OnChanges {
       .range(color_range);
 
     this.change(svg, pieData, pie, arc, outerArc, key, color, radius);
-  }
-
-  private set_color_range(data: any): string[] {
-    // 3 Base colors : UA, RU, NATO, NEUTRAL, OTHER
-    const base_colors: string[] = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"];
-    const color_range: string[] = [];
-    data.forEach((element: any) => {
-      if (element.name.includes('UA')) {
-        // Create a variant of the base color for UA
-        const color = d3.rgb(base_colors[0]).toString();
-        color_range.push(color);
-      }
-      else if (element.name.includes('RU')) {
-        // Create a variant of the base color for RU
-        const color = d3.rgb(base_colors[1]).toString();
-        color_range.push(color);
-      }
-      else if (element.name.includes('NEUTRAL')) {
-        // Create a variant of the base color for NEUTRAL
-        const color = d3.rgb(base_colors[2]).toString();
-        color_range.push(color);
-      }
-      else if (element.name.includes('NATO')) {
-        // Create a variant of the base color for OTHER
-        const color = d3.rgb(base_colors[3]).toString();
-        color_range.push(color);
-      }
-      else {
-        // Create a variant of the base color for OTHER
-        const color = d3.rgb(base_colors[4]).toString();
-        color_range.push(color);
-      }
-    });
-    return color_range;
   }
 
   // inspired by https://gist.github.com/dbuezas/9306799

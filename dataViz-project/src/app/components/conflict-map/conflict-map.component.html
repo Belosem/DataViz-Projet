@@ -1,0 +1,6 @@
+<div *ngIf="detailedSelectedEvents.length <= 0" class="title-container">
+    <p>Aucune date séléctionnée</p>
+</div>
+<div #map class="map-container" [style.visibility]="detailedSelectedEvents.length === 0 ? 'hidden' : 'visible'"
+    style="width:100%;height:100%;">
+</div>

@@ -9,7 +9,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatGridListModule} from '@angular/material/grid-list'; 
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +21,7 @@ import { ConflictStatsComponent } from './components/conflict-stats/conflict-sta
 import { ConflictsService } from './services/conflicts.service';
 import { HttpClientModule } from '@angular/common/http';
 import { PieChartEventsComponent } from './components/pie-chart-events/pie-chart-events.component';
+import { ConflictMapComponent } from './components/conflict-map/conflict-map.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { PieChartEventsComponent } from './components/pie-chart-events/pie-chart
     ConflictPannelComponent,
     ConflictStatsComponent,
     PieChartEventsComponent,
+    ConflictMapComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,7 +48,7 @@ import { PieChartEventsComponent } from './components/pie-chart-events/pie-chart
     HttpClientModule,
     MatFormFieldModule
   ],
-  providers: [ConflictsService],
+  providers: [ConflictsService, { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -102,10 +102,10 @@ export class ConflictPannelComponent implements AfterViewInit {
    * Create the chart
    */
   private createChart() {
-    const margin = { top: 60, right: 15, bottom: 20, left: 15 };
+    const margin = { top: 20, right: 15, bottom: 20, left: 15 };
     const parent = d3.select('#conflict-pannel-container').node() as HTMLElement;
-    const width = parent.clientWidth - 50;
-    const height = parent.clientHeight - 50;
+    const width = parent.clientWidth - margin.left - margin.right;
+    const height = parent.clientHeight - margin.top - margin.bottom;
 
     const selected_events: any = this.events.filter((d: any) => d.date >= this.selectedPeriod[0] && d.date <= this.selectedPeriod[1]);
     const min_max_date: any = d3.extent(selected_events, (d: any) => d.date);
@@ -207,18 +207,25 @@ export class ConflictPannelComponent implements AfterViewInit {
       });
       return eventCounts;
     });
-
+    console.log(transformedData)
     // Extract the keys for stacking (exclude the 'date' key)
-    const keys = this.eventTypes;
-
+    let keys : any = [];
+    this.eventTypes.forEach((type: any) => {
+      if(keys.indexOf(type) === -1)
+        keys.push(type);
+    });
+    console.log(keys)
     // Create a stack generator
     const stack = d3.stack()
       .keys(keys)
       .order(d3.stackOrderDescending)
       .offset(d3.stackOffsetNone);
 
-    // Transform the data
     const series = stack(transformedData);
+
+    console.log("series :", series)
+    // Transform the data
+    //const series = stack(transformedData);
     // Find the maximum stack value
     const maxStackValue: any = d3.max(transformedData, (d: any) => {
       let total = 0;
@@ -232,22 +239,19 @@ export class ConflictPannelComponent implements AfterViewInit {
     y.domain([0, maxStackValue]);
     // Assuming x is your time scale and y is your linear scale for counts
     svg.selectAll(".layer")
-      .data(series)
-      .enter().append("g")
-      .attr("fill", (d: any) => {
-        const c_ = (this.conflictsService.getEventTypeColor(d.key));
-        if (c_ === undefined)
-          return "#000000";
-        else
-          return c_;
-      })
-      .selectAll("rect")
-      .data(d => d)
-      .enter().append("rect")
-      .attr("x", (d: any) => x(d.data.date) + 2.5)
-      .attr("y", d => y(d[1]))
-      .attr("height", d => y(d[0]) - y(d[1]))
-      .attr("width", tickWidth - 5)
+    .data(series)
+    .enter().append("g")
+    .attr("fill", (d: any) => {
+      const color = this.conflictsService.getEventTypeColor(d.key);
+      return color || "#000000";
+    })
+    .selectAll("rect")
+    .data(d => d)
+    .enter().append("rect")
+    .attr("x", (d: any) => x(d.data.date) + 2.5)
+    .attr("y", d => y(d[1])) // Upper value for y
+    .attr("height", d => y(d[0]) - y(d[1])) // Height is the difference between the lower and upper values
+    .attr("width", tickWidth - 5);
 
     // Create hoverable rectangles
     const columnGroups = svg.selectAll(".column-group")

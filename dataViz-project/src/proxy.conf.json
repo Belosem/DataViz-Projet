@@ -1,6 +1,6 @@
 {
     "/v1/*": {
-    "target": "http://maps.googleapis.com/maps/api/*",
+    "target": "https://maps.googleapis.com/maps/api/*",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

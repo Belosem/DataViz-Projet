@@ -1,7 +1,7 @@
 <div class="title-container" *ngIf="pieChartData.length > 0">
     <div *ngIf="selectedDate !== ''" class="line-container">
         <p class="date-select-title">Date séléctionnée :</p>
-        <p>periodFormat({{selectedDate}})</p>
+        <p>{{selectedDate}}</p>
     </div>
     <div *ngIf="selectedDate == ''"class="line-container">
         <p class="date-select-title">Date séléctionnées :</p>
