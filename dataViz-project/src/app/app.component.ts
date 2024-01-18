@@ -11,11 +11,13 @@ import * as d3 from 'd3';
 export class AppComponent implements OnInit {
   title = 'dataViz-project';
   public detailedSelectedEvents: any = [];
+  public filteredSelectedEvents : any = [];
   public startDate: string = "";
   public endDate: string = "";
   public regionName: string = "World";
   public selectedDate: string = "";
   public selectedPeriodFormat: any = d3.timeFormat('%d %b. %Y');
+  public filteredEventName : any = "";
   // Google Map API
   @ViewChild('map') mapElement: any;
   map!: google.maps.Map;
@@ -25,6 +27,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.conflictService.selectedDetailedEvents$.subscribe((events: any) => {
       this.detailedSelectedEvents = events;
+      this.filteredSelectedEvents = events;
       if(this.detailedSelectedEvents.length > 0) {
         this.detailedSelectedEvents.forEach((event: any) => {
           if(this.startDate < event.date) {
@@ -41,6 +44,11 @@ export class AppComponent implements OnInit {
           }
         });
       }
+      this.initMap();
+    });
+
+    this.conflictService.filteredEvents$.subscribe((events: any) => {
+      this.filteredSelectedEvents = events;
       this.initMap();
     });
 
@@ -83,7 +91,6 @@ export class AppComponent implements OnInit {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
   
       const description = data.description;
       let originalSource = data.originalSource;
@@ -130,7 +137,15 @@ export class AppComponent implements OnInit {
     };
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapProperties);
     // add coordinates to map
-    this.detailedSelectedEvents.forEach((event: any) => {
+    let eventsToMark : any = [];
+    if (this.filteredSelectedEvents.length > 0) {
+      eventsToMark = this.filteredSelectedEvents;
+    }
+    else {
+      eventsToMark = this.detailedSelectedEvents;
+    }
+
+    eventsToMark.forEach((event: any) => {
       this.addMarker(event);
     });
   }

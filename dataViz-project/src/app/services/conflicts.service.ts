@@ -28,6 +28,8 @@ export class ConflictsService {
 
   public eventType_colorsMap: Map<string, string> = new Map([]);
 
+  public filteredEvents$: BehaviorSubject<[]> = new BehaviorSubject<[]>([]);
+
   constructor() {
     this.AllEvents = EventsData;
     this.createIconLabelsMap().then(icon_labelsMap => {
@@ -156,4 +158,9 @@ export class ConflictsService {
     else
       return icon;
   }
+
+  public setFilteredEvents(events: []): void {
+    this.filteredEvents$.next(events);
+  }
+  
 }

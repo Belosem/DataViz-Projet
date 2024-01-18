@@ -13,6 +13,7 @@ export class PieChartEventsComponent implements OnChanges {
   @Input() public selectedDate : string = "";
   @Input() public regionName: string | null = "";
   @Input() public parentContainerName : string = "";
+  public filteredEventName : any = "";
   public periodFormat: any = d3.timeFormat('%d %b. %Y');
   
   constructor(private conflictService: ConflictsService) { }
@@ -103,6 +104,8 @@ export class PieChartEventsComponent implements OnChanges {
 
   // inspired by https://gist.github.com/dbuezas/9306799
   private change(svg: any, pieData: any, pie: any, arc: any, outerArc: any, key: any, color: any, radius: any) {
+    this.filteredEventName = "";
+
     const arcTween = (a: any, arcGenerator: any) => {
       const current = { ...a };
       return (t: any) => {
@@ -147,16 +150,32 @@ export class PieChartEventsComponent implements OnChanges {
       .attrTween("d", (d: any) => arcTween(d, arc))
       .attr("stroke", "white");
 
-    slice.on("mouseover", (d: any) => {
-      slice.attr("fill-opacity", "0.3")
-      .attr("stroke-opacity", "0.3");
-    })
-    .on("mouseout", (d: any) => {
-      slice.attr("fill-opacity", "1")
-      .attr("stroke-opacity", "1");
-    }
-    )      
-
+    // Apply event listeners to both new and updated elements
+    // Re-select the slices to apply event listeners to both new and updated elements
+    svg.select(".slices").selectAll("path.slice")
+      .on("mouseover", (event: { currentTarget: any; }, d: any) => {
+        d3.select(event.currentTarget).style("opacity", 0.7);
+        // Additional mouseover logic here
+      })
+      .on("mouseout", (event: { currentTarget: any; }, d: any) => {
+        d3.select(event.currentTarget).style("opacity", 1);
+      })
+      .on("click", (event: any, d: { data: any; }) => {
+        this.conflictService.setFilteredEvents(d.data.events);
+        d3.selectAll(".slice").style("opacity", 1);
+        d3.select(event.currentTarget).attr("id", "selected-slice");
+        if(d.data.name.includes('UA'))
+          this.filteredEventName = "Ukraine - " + this.conflictService.getLabelByIcon(d.data.name);
+        else if(d.data.name.includes('RU'))
+          this.filteredEventName = "Russia - " + this.conflictService.getLabelByIcon(d.data.name);
+        else if(d.data.name.includes('NEUTRAL'))
+          this.filteredEventName = "Neutral - " + this.conflictService.getLabelByIcon(d.data.name);
+        else if(d.data.name.includes('NATO'))
+          this.filteredEventName = "NATO - " + this.conflictService.getLabelByIcon(d.data.name);
+        else
+          this.filteredEventName = "Other - " + this.conflictService.getLabelByIcon(d.data.name);
+      });
+    
     slice.exit().remove();
 
     const text = svg.select(".labels")
