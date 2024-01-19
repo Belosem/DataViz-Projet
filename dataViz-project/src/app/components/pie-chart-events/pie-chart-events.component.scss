@@ -44,6 +44,18 @@ polyline {
 	align-items: center;
 }
 
-#selected-slice {
-	opacity: 0.7;	
+path.selected-slice {
+	stroke: #fff;
+	stroke-width: 2px;
+}
+
+div#pie-chart-tooltip {
+	position: absolute;
+	display: none;
+	pointer-events: none;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	padding: 10px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px #999;
 }

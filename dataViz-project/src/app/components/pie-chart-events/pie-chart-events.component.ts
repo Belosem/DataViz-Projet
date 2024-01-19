@@ -15,7 +15,7 @@ export class PieChartEventsComponent implements OnChanges {
   @Input() public parentContainerName : string = "";
   public filteredEventName : any = "";
   public periodFormat: any = d3.timeFormat('%d %b. %Y');
-  
+  public numberOfEventscurrentInSlice : any = 0;
   constructor(private conflictService: ConflictsService) { }
 
   ngOnChanges() {
@@ -150,20 +150,47 @@ export class PieChartEventsComponent implements OnChanges {
       .attrTween("d", (d: any) => arcTween(d, arc))
       .attr("stroke", "white");
 
+    // Append a tooltip container to the body
+    const tooltip = d3.select('body').append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+      .style('position', 'absolute')
+      .style('text-align', 'center')
+      .style('padding', '2px')
+      .style('background', 'white')
+      .style('border', '0px')
+      .style('border-radius', '8px')
+      .style('pointer-events', 'none')
+      .style('z-index', '10'); // Ensure tooltip is above other elements
+
     // Apply event listeners to both new and updated elements
     // Re-select the slices to apply event listeners to both new and updated elements
     svg.select(".slices").selectAll("path.slice")
-      .on("mouseover", (event: { currentTarget: any; }, d: any) => {
-        d3.select(event.currentTarget).style("opacity", 0.7);
-        // Additional mouseover logic here
+      .on("mouseover", (event: any, d: any) => {
+          d3.select(event.currentTarget).style("opacity", 0.7).style("cursor", "pointer");
+          tooltip.style("opacity", 1).style('opacity', 1).style('left', (event.pageX + 10) + 'px')
+          .style('top', (event.pageY + 10) + 'px')
+        tooltip.html(d.data.events.length + " events");
       })
       .on("mouseout", (event: { currentTarget: any; }, d: any) => {
-        d3.select(event.currentTarget).style("opacity", 1);
+        if(!d3.select(event.currentTarget).classed("selected-slice"))
+          d3.select(event.currentTarget).style("opacity", 1).style("cursor", "default");
+        tooltip.style("opacity", 0)
       })
       .on("click", (event: any, d: { data: any; }) => {
         this.conflictService.setFilteredEvents(d.data.events);
-        d3.selectAll(".slice").style("opacity", 1);
-        d3.select(event.currentTarget).attr("id", "selected-slice");
+        // if this is already selected, remove the filter
+        if(d3.select(event.currentTarget).classed("selected-slice")) {
+          d3.select(event.currentTarget).attr("class", "slice").style("opacity", 1);
+          this.filteredEventName = "";
+          this.conflictService.setFilteredEvents([]);
+          return;
+        }
+        // Remove previous selected slice
+        d3.selectAll(".selected-slice").attr("class", "slice").style("opacity", 1);
+        // Set new selected slice
+        d3.select(event.currentTarget).attr("class", "selected-slice");
+        // Set up title
         if(d.data.name.includes('UA'))
           this.filteredEventName = "Ukraine - " + this.conflictService.getLabelByIcon(d.data.name);
         else if(d.data.name.includes('RU'))
@@ -182,10 +209,14 @@ export class PieChartEventsComponent implements OnChanges {
       .selectAll("text")
       .data(pie(pieData), key);
 
+    console.log("text", text)
+    
     text.enter()
       .append("text")
       .attr("dy", ".35em")
-      .text((d : any) => this.conflictService.getLabelByIcon(d.data.name))
+      .text((d : any) => {
+        return this.conflictService.getLabelByIcon(d.data.name)
+      })
       .merge(text) // Merge enter and update selections
       .transition().duration(1000)
       .attrTween("transform", (d : any) => textTween(d))

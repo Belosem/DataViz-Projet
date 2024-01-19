@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import EventsData from '../../assets/data/events/ukraineConflictEventPoints.json';
+import EventsData from '../../assets/data/events/UkraineConflictEventPoints.json';
 import { BehaviorSubject, retry } from 'rxjs';
 import * as d3 from 'd3';
 
@@ -53,7 +53,7 @@ export class ConflictsService {
             iconLabelsCSV.forEach((row: any) => {
               let rowSplit = row.split(",");
               // remove "\r" in the end of the string
-              rowSplit[1] = rowSplit[1].slice(0, -1);
+              //rowSplit[1] = rowSplit[1].slice(0, -1);
               icon_labelsMap.set(rowSplit[0], rowSplit[1]);
             });
             resolve(icon_labelsMap);
