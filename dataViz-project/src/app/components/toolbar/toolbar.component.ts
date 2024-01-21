@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class ToolbarComponent {
 
+  scrollToAbout(): void {
+    const aboutSection = document.getElementById('about-section');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+  
 }

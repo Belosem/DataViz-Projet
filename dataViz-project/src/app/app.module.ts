@@ -21,7 +21,11 @@ import { ConflictStatsComponent } from './components/conflict-stats/conflict-sta
 import { ConflictsService } from './services/conflicts.service';
 import { HttpClientModule } from '@angular/common/http';
 import { PieChartEventsComponent } from './components/pie-chart-events/pie-chart-events.component';
+<<<<<<< Updated upstream
 import { ConflictMapComponent } from './components/conflict-map/conflict-map.component';
+=======
+import { AboutComponent } from './components/about/about.component';
+>>>>>>> Stashed changes
 
 
 @NgModule({
@@ -31,7 +35,11 @@ import { ConflictMapComponent } from './components/conflict-map/conflict-map.com
     ConflictPannelComponent,
     ConflictStatsComponent,
     PieChartEventsComponent,
+<<<<<<< Updated upstream
     ConflictMapComponent,
+=======
+    AboutComponent,
+>>>>>>> Stashed changes
   ],
   imports: [
     BrowserModule,
@@ -46,7 +54,10 @@ import { ConflictMapComponent } from './components/conflict-map/conflict-map.com
     MatIconModule,
     MatInputModule,
     HttpClientModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatToolbarModule, 
+    MatButtonModule, 
+    MatIconModule,
   ],
   providers: [ConflictsService, { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   bootstrap: [AppComponent]

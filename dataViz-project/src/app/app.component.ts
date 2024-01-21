@@ -1,4 +1,4 @@
-import { OnInit, Component, ViewChild } from '@angular/core';
+import { OnInit, Component, ViewChild, ElementRef } from '@angular/core';
 import { ConflictsService } from './services/conflicts.service';
 import { } from 'googlemaps';
 import * as d3 from 'd3';
@@ -21,6 +21,8 @@ export class AppComponent implements OnInit {
   // Google Map API
   @ViewChild('map') mapElement: any;
   map!: google.maps.Map;
+  showNewComponent: boolean = false;
+  @ViewChild('content') content!: ElementRef;
 
   constructor(private conflictService: ConflictsService) { }
 

@@ -54,7 +54,8 @@ Les limites potentielles de ces données sont entre autresla fiabilité de la so
 
 ## Travaux important liés au projet
 
-https://geoconfirmed.org
+- https://geoconfirmed.org
+- https://abardou.github.io/viz-habits/#/vitrine
 
 ## Organisation
 
