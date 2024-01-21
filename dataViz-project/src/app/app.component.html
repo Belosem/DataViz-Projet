@@ -17,8 +17,9 @@
 
     <!-- Other -->
     <mat-grid-tile id="conflict-stats-container">
-      <app-pie-chart-events [parentContainerName]="'#conflict-stats-container'" [dateRange]="[startDate, endDate]" [selectedDate]="selectedDate"
-        [pieChartData]="detailedSelectedEvents" [regionName]="regionName"></app-pie-chart-events>
+      <app-pie-chart-events [parentContainerName]="'#conflict-stats-container'" [dateRange]="[startDate, endDate]"
+        [selectedDate]="selectedDate" [pieChartData]="detailedSelectedEvents"
+        [regionName]="regionName"></app-pie-chart-events>
     </mat-grid-tile>
     <!--
     <mat-grid-tile colspan="2">
@@ -26,6 +27,10 @@
     </mat-grid-tile>
   -->
   </mat-grid-list>
+
+  <div class="element"><app-conflict-stats></app-conflict-stats></div>
+
+  <div class="element"><app-about></app-about></div>
 
 </div>
 

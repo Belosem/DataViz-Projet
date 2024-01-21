@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 
 import * as d3 from 'd3';
-import { geoMercator, geoPath, ZoomBehavior} from 'd3';
+import { geoMercator, geoPath, ZoomBehavior } from 'd3';
 import { ConflictsService } from 'src/app/services/conflicts.service';
 
 @Component({
@@ -12,7 +12,6 @@ import { ConflictsService } from 'src/app/services/conflicts.service';
 export class ConflictStatsComponent implements AfterViewInit {
   data: any;
   selectedEvents: any = [];
-  googleMap!: google.maps.Map;
   selectedCountry: string = 'Russia';
   countries: { value: string; label: string; path: string }[] = [
     { value: 'Russia', label: 'Russia', path: '../../../assets/data/russia_geojson/Russia.geojson' },
@@ -33,9 +32,6 @@ export class ConflictStatsComponent implements AfterViewInit {
   ngAfterViewInit() {
     // Load initial data
     this.loadData();
-
-    // Initialize Google Map in the background
-    this.initializeGoogleMap();
   }
 
   /**
@@ -44,20 +40,6 @@ export class ConflictStatsComponent implements AfterViewInit {
   onCountryChange() {
     this.loadData();
   }
-
-  /**
-   * Initialize Google Map in the background
-   */
-  initializeGoogleMap() {
-    const mapOptions = {
-      center: new google.maps.LatLng(35.2271, -80.8431),
-      zoom: 12,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-
-    this.googleMap = new google.maps.Map(document.getElementById('google-map-container')!, mapOptions);
-  }
-
 
   getCountryPath(value: string): string {
     const country = this.countries.find(country => country.value === value);
@@ -88,39 +70,40 @@ export class ConflictStatsComponent implements AfterViewInit {
     );
   }
 
+  /**
+ * Add events on the map depending on the selected period
+ * @param svg 
+ * @param projection 
+ * @param eventsData 
+ */
 
-    /**
-   * Add events on the map depending on the selected period
-   * @param svg 
-   * @param projection 
-   * @param eventsData 
-   */
-    setSelectedEvents(svg: any, projection: any, eventsData: any[]) {
+/*  setSelectedEvents(svg: any, projection: any, eventsData: any[]) {
 
-      const markersGroup = svg.append('g').attr('class', 'markers');
-  
-      // Convertissez les coordonnées des coins de la carte en coordonnées x, y
-      const [[x0, y0], [x1, y1]] = d3.geoPath().projection(projection).bounds(this.data);
-  
-      // Filtrer les markers
-      const filteredEvents = eventsData.filter((event) => {
-        const [x, y] = projection([event.longitude, event.latitude]);
-        return x >= x0 && x <= x1 && y >= y0 && y <= y1;
-      });
-  
-      // Get event coordinates
-      filteredEvents.forEach((event) => {
-        const [x, y] = projection([event.longitude, event.latitude]);
-  
-        // Add markers on the map
-        markersGroup.append('image')
-          .attr('x', x)
-          .attr('y', y)
-          .attr('width', 10)
-          .attr('height', 10)
-          .attr('xlink:href', `assets/icons_war/${event.icon}`);
-      });
-    }
+    const markersGroup = svg.append('g').attr('class', 'markers');
+
+    // Convertissez les coordonnées des coins de la carte en coordonnées x, y
+    const [[x0, y0], [x1, y1]] = d3.geoPath().projection(projection).bounds(this.data);
+
+    // Filtrer les markers
+    const filteredEvents = eventsData.filter((event) => {
+      const [x, y] = projection([event.longitude, event.latitude]);
+      return x >= x0 && x <= x1 && y >= y0 && y <= y1;
+    });
+
+    // Get event coordinates
+    filteredEvents.forEach((event) => {
+      const [x, y] = projection([event.longitude, event.latitude]);
+
+      // Add markers on the map
+      markersGroup.append('image')
+        .attr('x', x)
+        .attr('y', y)
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('xlink:href', `assets/icons_war/${event.icon}`);
+    });
+  }
+  */
 
   /**
    * Draw map
@@ -131,16 +114,27 @@ export class ConflictStatsComponent implements AfterViewInit {
     const statsContainer = d3.select('#conflict-stats-container').node() as HTMLElement;
 
     // Dynamically get the width and height of the stats container
-    const width = statsContainer.offsetWidth;
-    const height = statsContainer.offsetHeight;
+    const width = 900;
+    const height = 600;
 
     // Define projection
-    const projection = geoMercator()
-      .center([105, 71])
+    const projectionRussia = geoMercator()
+      .center([103, 71])
       .translate([width / 2, height / 2])
-      .scale(200);
+      .scale(280);
 
-    const path = geoPath().projection(projection);
+    const projectionUkraine = geoMercator()
+      .center([30, 49])
+      .translate([width / 2, height / 2])
+      .scale(2000);
+
+    var path = geoPath();
+
+    if (this.selectedCountry === 'Russia') {
+      path = geoPath().projection(projectionRussia);
+    } else {
+      path = geoPath().projection(projectionUkraine);
+    }
 
     const svg = d3.select('#map-container')
       .append('svg')
@@ -151,7 +145,16 @@ export class ConflictStatsComponent implements AfterViewInit {
     const tooltip = d3
       .select("#map-container")
       .append("div")
-      .attr("class", "hidden tooltip");
+      .attr('class', 'tooltip')
+      .style('opacity', 0.9)
+      .style('position', 'absolute')
+      .style('text-align', 'center')
+      .style('padding', '5px')
+      .style('background', '#D4D3DC')
+      .style('border', '0px')
+      .style('border-radius', '2px')
+      .style('pointer-events', 'none')
+      .style('z-index', '10');
 
     // Create a group for the map features
     const mapGroup = svg.append('g');
@@ -163,41 +166,39 @@ export class ConflictStatsComponent implements AfterViewInit {
       .join('path')
       .attr('class', 'region')
       .attr('d', (d: any) => path(d))
-      .style('fill', 'steelblue')
-      .attr('stroke', 'black')
+      .style('fill', '#4e77cb')
+      .attr('stroke', '#D4D3DC')
       .on('mousemove', (event: any, d: any) => {
-        const mousePosition = [event.x, event.y];
+        const mousePosition = [event.pageX, event.pageY];
         // Show tooltip on mousemove
         tooltip
-          .classed('hidden', false)
-          .attr(
-            'style',
-            'left:' +
-            (mousePosition[0] + 15) +
-            'px; top:' +
-            (mousePosition[1] - 35) +
-            'px'
-          )
+          .style('opacity', 5)
+          .style('left', (event.pageX + 10) + 'px')
+          .style('top', (event.pageY + 10) + 'px')
           .html(() => {
             return this.selectedCountry === 'Russia'
               ? d.properties.name_latin : d.properties["name:fr"];
           });
+
+        // Change color on hover
+        d3.select(event.currentTarget).style('fill', '#646464');
       })
-      .on('mouseout', () => {
+      .on('mouseout', (event: any, d: any) => {
         // Hide tooltip on mouseout
-        tooltip.classed('hidden', true);
+        tooltip.style('opacity', 0);
+        d3.select(event.currentTarget).style('fill', '#4e77cb');
       });
 
-    this.setSelectedEvents(mapGroup, projection, this.selectedEvents);
-
-    // Enable zooming
-    const zoom: ZoomBehavior<Element, unknown> = d3.zoom()
-      .scaleExtent([1, 8])  // Adjust the scale extent as needed
-      .on('zoom', (event) => {
-        mapGroup.attr('transform', event.transform);
-      });
-    svg.call(zoom as any);
-
+    // this.setSelectedEvents(mapGroup, projection, this.selectedEvents);
+    /*
+      // Enable zooming
+      const zoom: ZoomBehavior<Element, unknown> = d3.zoom()
+        .scaleExtent([1, 8])  // Adjust the scale extent as needed
+        .on('zoom', (event) => {
+          mapGroup.attr('transform', event.transform);
+        });
+      svg.call(zoom as any);
+    */
     console.log('Map created successfully!');
   }
 }

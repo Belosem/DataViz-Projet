@@ -1,15 +1,8 @@
-.region {
-  fill: #000;
-  stroke: #fff;
-  stroke-width: 1px;
-}
 .region:hover {
   fill: #666;
 }
-.hidden {
-  display: none;
-}
-div.tooltip {
+
+.tooltip {
   color: #222;
   background-color: #fff;
   padding: 0.5em;
@@ -18,9 +11,29 @@ div.tooltip {
   opacity: 0.9;
   position: absolute;
 }
+
 /* Style for the select input */
 .select-container {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  margin: 80px 120px 120px 120px;
+  width: 40px;
+  height: 40px;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+}
+
+.element {
+  margin-bottom: 50px;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  color: #344D59;
 }

@@ -3,6 +3,11 @@ mat-grid-tile {
   border: 1px solid rgb(177, 177, 177);
 }
 
+mat-grid-list {
+  margin-top: 49px;
+  padding: 16px;
+}
+
 #conflict-pannel-container,
 #conflict-stats-container,
 #conflict-map-container {
@@ -27,47 +32,6 @@ mat-grid-tile {
 }
 
 .title-container p {
-  margin: 10px 0;
+  margin: 100px 0;
   white-space: nowrap;
-}
-
-.arrow-container {
-  cursor: pointer;
-  text-align: center;
-  margin-top: 20px; /* Ajoutez une marge au conteneur */
-}
-
-.arrow {
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 15px solid #333; /* Couleur de la flèche */
-  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out; /* Ajoutez la transition pour la couleur */
-  margin: 0 auto; /* Centre la flèche horizontalement */
-}
-
-.animate-before-click {
-  animation: bounce 0.6s ease infinite, colorChange 1s ease-in-out infinite; /* Ajoutez une animation de rebondissement et de changement de couleur */
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes colorChange {
-  0%, 100% {
-    color: #333;
-  }
-  50% {
-    color: #e74c3c; /* Changez la couleur de la flèche à mi-chemin */
-  }
 }

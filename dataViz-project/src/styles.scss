@@ -1,6 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%;
-    background-color: #F5EFE6;
+    background-color: #D4D3DC;
   }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+app-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+main {
+  flex: 1;
+  padding: 16px;
+}
