@@ -1,0 +1,223 @@
+icon,label
+_CIRCLES_0051CA_UA_56_01.png,Materiel Terre-Terre (MTT)
+_CIRCLES_0051CA_UA_56_02.png,Dommage Terre-Terre  MTT
+_CIRCLES_0051CA_UA_56_03.png,Destruction Terre-Terre  MTT
+_CIRCLES_0051CA_UA_56_10.png,Bombarderment
+_CIRCLES_0051CA_UA_56_100.png,Migrations
+_CIRCLES_0051CA_UA_56_101.png,Otages
+_CIRCLES_0051CA_UA_56_11.png,Pont
+_CIRCLES_0051CA_UA_56_110.png,Drone portatif
+_CIRCLES_0051CA_UA_56_111.png,Drone militaire
+_CIRCLES_0051CA_UA_56_112.png,Destruction Drone militaire
+_CIRCLES_0051CA_UA_56_12.png,Dommage Pont
+_CIRCLES_0051CA_UA_56_13.png,Destruction Pont
+_CIRCLES_0051CA_UA_56_132.png,Dommage Campement
+_CIRCLES_0051CA_UA_56_133.png,Destruction Campement
+_CIRCLES_0051CA_UA_56_141.png,Bateau / Drone marin
+_CIRCLES_0051CA_UA_56_142.png,Destruction / Dommage Bateau - Drone
+_CIRCLES_0051CA_UA_56_161.png,Logistique
+_CIRCLES_0051CA_UA_56_162.png,Dommage / Destruction Train
+_CIRCLES_0051CA_UA_56_171.png,Blindé
+_CIRCLES_0051CA_UA_56_172.png,Dommage Blindé
+_CIRCLES_0051CA_UA_56_173.png,Destruction Blindé
+_CIRCLES_0051CA_UA_56_20.png,Point de vue (Image)
+_CIRCLES_0051CA_UA_56_201.png,Materiel Terre-Air (MTA)
+_CIRCLES_0051CA_UA_56_202.png,Dommage Materiel Terre-Air (MTA)
+_CIRCLES_0051CA_UA_56_203.png,Destruction Materiel Terre-Air (MTA)
+_CIRCLES_0051CA_UA_56_21.png,Helicoptère
+_CIRCLES_0051CA_UA_56_22.png,Dommage Helicoptère
+_CIRCLES_0051CA_UA_56_23.png,Destruction Helicoptère
+_CIRCLES_0051CA_UA_56_30.png,Point de vue (Vidéo)
+_CIRCLES_0051CA_UA_56_31.png,Avion
+_CIRCLES_0051CA_UA_56_32.png,Dommage / Destruction Avion
+_CIRCLES_0051CA_UA_56_41.png,Tank
+_CIRCLES_0051CA_UA_56_42.png,Dommage Tank
+_CIRCLES_0051CA_UA_56_43.png,Destruction Tank
+_CIRCLES_0051CA_UA_56_50.png,Cadavre
+_CIRCLES_0051CA_UA_56_51.png,Bateau militaire
+_CIRCLES_0051CA_UA_56_52.png,Dommage / Destruction Batteau militaire
+_CIRCLES_0051CA_UA_56_61.png,Camion
+_CIRCLES_0051CA_UA_56_62.png,Dommage Camion
+_CIRCLES_0051CA_UA_56_63.png,Destruction Camion
+_CIRCLES_0051CA_UA_56_70.png,Explosion
+_CIRCLES_0051CA_UA_56_71.png,Materiel Terre-Air (MTA)
+_CIRCLES_0051CA_UA_56_72.png,Dommage / Destruction MTA
+_CIRCLES_0051CA_UA_56_81.png,Avion civil / Gouvernemental
+_CIRCLES_0051CA_UA_56_90.png,Combat
+_CIRCLES_0051CA_UA_56_91.png,Context
+_CIRCLES_0051CA_UA_56_92.png,Infantrie
+_CIRCLES_0051CA_UA_56_93.png,Destruction Infantrie
+_CIRCLES_0A5900_NATO_56_100.png,Migrations
+_CIRCLES_0A5900_NATO_56_161.png,Logitisque
+_CIRCLES_0A5900_NATO_56_21.png,Helicoptère
+_CIRCLES_3184FF_UA_CIV_56_10.png,Bombarderment
+_CIRCLES_3184FF_UA_CIV_56_100.png,Migrations
+_CIRCLES_3184FF_UA_CIV_56_120.png,Checkpoint
+_CIRCLES_3184FF_UA_CIV_56_141.png,Bateau / Drone marin
+_CIRCLES_3184FF_UA_CIV_56_171.png,Blindé
+_CIRCLES_3184FF_UA_CIV_56_172.png,Dommage / Destruction Blindé
+_CIRCLES_3184FF_UA_CIV_56_20.png,Point de vue (Image)
+_CIRCLES_3184FF_UA_CIV_56_30.png,Point de vue (Video)
+_CIRCLES_3184FF_UA_CIV_56_41.png,Tank
+_CIRCLES_3184FF_UA_CIV_56_50.png,Cadavre
+_CIRCLES_3184FF_UA_CIV_56_52.png,Destruction / Dommage Bateau Militaire
+_CIRCLES_3184FF_UA_CIV_56_61.png,Camion
+_CIRCLES_3184FF_UA_CIV_56_62.png,Dommage / Destruction Camion
+_CIRCLES_3184FF_UA_CIV_56_70.png,Explosion
+_CIRCLES_3184FF_UA_CIV_56_90.png,Combat
+_CIRCLES_400080_BE_56_121.png,Aeroport
+_CIRCLES_400080_BE_56_130.png,Point de vue (Vidéo/Image)
+_CIRCLES_400080_BE_56_161.png,Logistique
+_CIRCLES_400080_BE_56_171.png,Blindé
+_CIRCLES_400080_BE_56_20.png, Point de vue (Image)
+_CIRCLES_400080_BE_56_201.png,Materiel Terre-Air (MTA)
+_CIRCLES_400080_BE_56_21.png,Helicoptère
+_CIRCLES_400080_BE_56_30.png,Point de vue (Vidéo)
+_CIRCLES_400080_BE_56_41.png,Tank
+_CIRCLES_400080_BE_56_61.png,Camion
+_CIRCLES_400080_BE_56_71.png,Materiel Terre-Air (MTA)
+_CIRCLES_65BB59_NATO_CIV_56_100.png,Migrations
+_CIRCLES_65BB59_NATO_CIV_56_30.png,Point of views
+_CIRCLES_666666_UNKNOWN_56_100.png,Migrations
+_CIRCLES_666666_UNKNOWN_56_102.png,Prisonnier Mort
+_CIRCLES_666666_UNKNOWN_56_131.png,Camp de base
+_CIRCLES_666666_UNKNOWN_56_172.png,Dommage Blindé
+_CIRCLES_666666_UNKNOWN_56_173.png,Destruction Blindé
+_CIRCLES_666666_UNKNOWN_56_20.png, Point de vue (Image)
+_CIRCLES_666666_UNKNOWN_56_201.png,Materiel Terre-Air (MTA)
+_CIRCLES_666666_UNKNOWN_56_30.png,Point de vue (Vidéo)
+_CIRCLES_666666_UNKNOWN_56_41.png,Tank
+_CIRCLES_666666_UNKNOWN_56_42.png,Dommage Tank
+_CIRCLES_666666_UNKNOWN_56_61.png,Camion
+_CIRCLES_666666_UNKNOWN_56_62.png,Dommage Camion
+_CIRCLES_666666_UNKNOWN_56_63.png,Destruction Camion
+_CIRCLES_666666_UNKNOWN_56_71.png,Materiel Terre-Air (MTA)
+_CIRCLES_666666_UNKNOWN_56_82.png,Dommage / Destruction Avion civil / gouvernemental
+_CIRCLES_666666_UNKNOWN_56_93.png,Destruction Infantrie
+_CIRCLES_AC7339_NEUTRAL_56_10.png,Bombardement
+_CIRCLES_AC7339_NEUTRAL_56_100.png,Migrations
+_CIRCLES_AC7339_NEUTRAL_56_101.png,Otages
+_CIRCLES_AC7339_NEUTRAL_56_11.png,Pont
+_CIRCLES_AC7339_NEUTRAL_56_111.png,Drone Militaire
+_CIRCLES_AC7339_NEUTRAL_56_112.png,Destruction Drone militaire
+_CIRCLES_AC7339_NEUTRAL_56_12.png,Dommage Pont
+_CIRCLES_AC7339_NEUTRAL_56_120.png,Checkpoint
+_CIRCLES_AC7339_NEUTRAL_56_13.png,Destruction Pont
+_CIRCLES_AC7339_NEUTRAL_56_131.png,Camp de base
+_CIRCLES_AC7339_NEUTRAL_56_161.png,Logistique
+_CIRCLES_AC7339_NEUTRAL_56_162.png,Dommage / Destruction Train
+_CIRCLES_AC7339_NEUTRAL_56_171.png,Blindé
+_CIRCLES_AC7339_NEUTRAL_56_172.png,Dommage Blindé
+_CIRCLES_AC7339_NEUTRAL_56_173.png,Destruction Blindé
+_CIRCLES_AC7339_NEUTRAL_56_192.png,Dommage Batiment
+_CIRCLES_AC7339_NEUTRAL_56_193.png,Destruction Batiment
+_CIRCLES_AC7339_NEUTRAL_56_20.png, Point de vue (Image)
+_CIRCLES_AC7339_NEUTRAL_56_30.png,Point de vue (Vidéo)
+_CIRCLES_AC7339_NEUTRAL_56_41.png,Tank
+_CIRCLES_AC7339_NEUTRAL_56_42.png,Dommage Tank
+_CIRCLES_AC7339_NEUTRAL_56_43.png,Destruction Tank
+_CIRCLES_AC7339_NEUTRAL_56_50.png,Cadavre
+_CIRCLES_AC7339_NEUTRAL_56_51.png,Bateau militaire
+_CIRCLES_AC7339_NEUTRAL_56_52.png,Dommage / Destruction Batteau militaire
+_CIRCLES_AC7339_NEUTRAL_56_61.png,Camion
+_CIRCLES_AC7339_NEUTRAL_56_62.png,Dommage Camion
+_CIRCLES_AC7339_NEUTRAL_56_63.png,Destruction Camion
+_CIRCLES_AC7339_NEUTRAL_56_70.png,Explosion
+_CIRCLES_AC7339_NEUTRAL_56_91.png,Context
+_CIRCLES_AC7339_NEUTRAL_56_93.png,Destruction Infantrie
+_CIRCLES_DDDD00_CBRN_56_10.png,Bombarderment
+_CIRCLES_DDDD00_CBRN_56_30.png,Point de vue (Vidéo)
+_CIRCLES_DDDD00_CBRN_56_60.png,Produit chimique
+_CIRCLES_DDDD00_CBRN_56_70.png,Explosion
+_CIRCLES_DDDD00_CBRN_56_71.png,Materiel Terre-Air (MTA)
+_CIRCLES_DDDD00_CBRN_56_72.png,Dommage / Destruction MTA
+_CIRCLES_DDDD00_CBRN_56_73.png,Destruction Materiel Terre-Air (MTA)
+_CIRCLES_DDDD00_CBRN_56_80.png,Site Nucléaire
+_CIRCLES_E00000_RU_56_00.png,Produit chimique
+_CIRCLES_E00000_RU_56_01.png,Materiel Terre-Terre (MTT)
+_CIRCLES_E00000_RU_56_02.png,MTT Dommage
+_CIRCLES_E00000_RU_56_03.png,Destruction MTT
+_CIRCLES_E00000_RU_56_10.png,Bombarderment
+_CIRCLES_E00000_RU_56_100.png,Migrations
+_CIRCLES_E00000_RU_56_101.png,Otages
+_CIRCLES_E00000_RU_56_102.png,Prisonnier Mort
+_CIRCLES_E00000_RU_56_11.png,Pont
+_CIRCLES_E00000_RU_56_110.png,Drone portatif
+_CIRCLES_E00000_RU_56_111.png,Drone militaire
+_CIRCLES_E00000_RU_56_112.png,Destruction Drone militaire
+_CIRCLES_E00000_RU_56_12.png,Dommage Pont
+_CIRCLES_E00000_RU_56_120.png,Checkpoint
+_CIRCLES_E00000_RU_56_121.png,Aeroport
+_CIRCLES_E00000_RU_56_13.png,Destruction Pont
+_CIRCLES_E00000_RU_56_131.png,Camp de base
+_CIRCLES_E00000_RU_56_132.png,Dommage Campement
+_CIRCLES_E00000_RU_56_133.png,Destruction Campement
+_CIRCLES_E00000_RU_56_141.png,Bateau / Drone marin
+_CIRCLES_E00000_RU_56_142.png,Destruction / Dommage Bateau - Drone
+_CIRCLES_E00000_RU_56_151.png,Sous-Marin
+_CIRCLES_E00000_RU_56_152.png,Dommage / Destruction Sous-Marin
+_CIRCLES_E00000_RU_56_161.png,Logistique
+_CIRCLES_E00000_RU_56_162.png,Dommage Train
+_CIRCLES_E00000_RU_56_163.png,Destruction Train
+_CIRCLES_E00000_RU_56_171.png,Blindé
+_CIRCLES_E00000_RU_56_172.png,Dommage Blindé
+_CIRCLES_E00000_RU_56_173.png,Destruction Blindé
+_CIRCLES_E00000_RU_56_181.png,Drone reconnaissance
+_CIRCLES_E00000_RU_56_182.png,Dommage / Destruction Drone reconnaissance
+_CIRCLES_E00000_RU_56_191.png,Batiment
+_CIRCLES_E00000_RU_56_192.png,Dommage Batiment
+_CIRCLES_E00000_RU_56_193.png,Destruction Batiment
+_CIRCLES_E00000_RU_56_20.png, Point de vue (Image)
+_CIRCLES_E00000_RU_56_201.png,Materiel Terre-Air (MTA)
+_CIRCLES_E00000_RU_56_202.png,Dommage Materiel Terre-Air (MTA)
+_CIRCLES_E00000_RU_56_203.png,Destruction Materiel Terre-Air (MTA)
+_CIRCLES_E00000_RU_56_21.png,Helicoptère
+_CIRCLES_E00000_RU_56_22.png,Dommage Helicoptère
+_CIRCLES_E00000_RU_56_23.png,Destruction Helicoptère
+_CIRCLES_E00000_RU_56_30.png,Point de vue (Vidéo)
+_CIRCLES_E00000_RU_56_31.png,Avion
+_CIRCLES_E00000_RU_56_32.png,Destruction Avion
+_CIRCLES_E00000_RU_56_33.png,Destruction Avion
+_CIRCLES_E00000_RU_56_40.png,Materiel Nucléaire
+_CIRCLES_E00000_RU_56_41.png,Tank
+_CIRCLES_E00000_RU_56_42.png,Dommage Tank
+_CIRCLES_E00000_RU_56_43.png,Destruction Tank
+_CIRCLES_E00000_RU_56_50.png,Cadavre
+_CIRCLES_E00000_RU_56_51.png,Bateau militaire
+_CIRCLES_E00000_RU_56_52.png,Dommage / Destruction Batteau militaire
+_CIRCLES_E00000_RU_56_60.png,Produit chimique
+_CIRCLES_E00000_RU_56_61.png,Camion
+_CIRCLES_E00000_RU_56_62.png,Dommage Camion
+_CIRCLES_E00000_RU_56_63.png,Destruction Camion
+_CIRCLES_E00000_RU_56_70.png,Explosion
+_CIRCLES_E00000_RU_56_71.png,Materiel Terre-Air (MTA)
+_CIRCLES_E00000_RU_56_72.png,Dommage / Destruction MTA
+_CIRCLES_E00000_RU_56_73.png,Destruction Materiel Terre-Air (MTA)
+_CIRCLES_E00000_RU_56_81.png,Avion civil / Gouvernemental
+_CIRCLES_E00000_RU_56_82.png,Dommage Avion civil / gouvernemental
+_CIRCLES_E00000_RU_56_83.png,Destruction Avion civil
+_CIRCLES_E00000_RU_56_90.png,Combat
+_CIRCLES_E00000_RU_56_91.png,Context
+_CIRCLES_E00000_RU_56_92.png,Infantrie
+_CIRCLES_E00000_RU_56_93.png,Destruction Infantrie
+_CIRCLES_FF6666_RU_CIV_56_100.png,Migrations
+_CIRCLES_FF6666_RU_CIV_56_111.png,Drone Militaire
+_CIRCLES_FF6666_RU_CIV_56_12.png,Dommage Pont
+_CIRCLES_FF6666_RU_CIV_56_120.png,Checkpoint
+_CIRCLES_FF6666_RU_CIV_56_161.png,Logistique
+_CIRCLES_FF6666_RU_CIV_56_162.png,Dommage / Destruction Train
+_CIRCLES_FF6666_RU_CIV_56_192.png,Dommage Batiment
+_CIRCLES_FF6666_RU_CIV_56_20.png, Point de vue (Image)
+_CIRCLES_FF6666_RU_CIV_56_22.png,Dommage Helicoptère
+_CIRCLES_FF6666_RU_CIV_56_30.png,Point de vue (Vidéo)
+_CIRCLES_FF6666_RU_CIV_56_50.png,Cadavre
+_CIRCLES_FF6666_RU_CIV_56_51.png,Bateau militaire
+_CIRCLES_FF6666_RU_CIV_56_52.png,Dommage / Destruction Batteau militaire
+_CIRCLES_FF6666_RU_CIV_56_61.png,Camion
+_CIRCLES_FF6666_RU_CIV_56_62.png,Dommage Camion
+_CIRCLES_FF6666_RU_CIV_56_70.png,Explosion
+_CIRCLES_FF6666_RU_CIV_56_90.png,Combat
+_CIRCLES_RU_56_FLAG.png,Drapeau
+_CIRCLES_UA_56_FLAG.png,Drapeau
+icon-81.png,Attention
+icon-82.png,Helicoptère civil
