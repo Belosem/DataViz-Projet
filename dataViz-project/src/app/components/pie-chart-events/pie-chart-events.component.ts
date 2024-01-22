@@ -10,12 +10,12 @@ import { ConflictsService } from 'src/app/services/conflicts.service';
 export class PieChartEventsComponent implements OnChanges {
   @Input() public pieChartData: any = [];
   @Input() public dateRange: any;
-  @Input() public selectedDate : string = "";
+  @Input() public selectedDate: string = "";
   @Input() public regionName: string | null = "";
-  @Input() public parentContainerName : string = "";
-  public filteredEventName : any = "";
+  @Input() public parentContainerName: string = "";
+  public filteredEventName: any = "";
   public periodFormat: any = d3.timeFormat('%d %b. %Y');
-  public numberOfEventscurrentInSlice : any = 0;
+  public numberOfEventscurrentInSlice: any = 0;
   constructor(private conflictService: ConflictsService) { }
 
   ngOnChanges() {
@@ -70,8 +70,8 @@ export class PieChartEventsComponent implements OnChanges {
       .attr("class", "labels");
     svg.append("g")
       .attr("class", "lines");
-    
-      // Set svg position
+
+    // Set svg position
     svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     const key = (d: any) => d.data.name;
@@ -79,15 +79,15 @@ export class PieChartEventsComponent implements OnChanges {
     const color_range: string[] = []
     pieData.forEach((element: any) => {
       let type = element.name;
-      if(type.includes('UA')) 
+      if (type.includes('UA'))
         type = 'UA';
-      else if(type.includes('RU'))
+      else if (type.includes('RU'))
         type = 'RU';
-      else if(type.includes('NEUTRAL'))
+      else if (type.includes('NEUTRAL'))
         type = 'NEUTRAL';
-      else if(type.includes('NATO'))
+      else if (type.includes('NATO'))
         type = 'NATO';
-      else if(type.includes('OTHER'))
+      else if (type.includes('OTHER'))
         type = 'OTHER';
       else
         type = 'OTHER';
@@ -167,42 +167,77 @@ export class PieChartEventsComponent implements OnChanges {
     // Re-select the slices to apply event listeners to both new and updated elements
     svg.select(".slices").selectAll("path.slice")
       .on("mouseover", (event: any, d: any) => {
-          d3.select(event.currentTarget).style("opacity", 0.7).style("cursor", "pointer");
-          tooltip.style("opacity", 1).style('opacity', 1).style('left', (event.pageX + 10) + 'px')
+        d3.select(event.currentTarget).style("opacity", 0.7).style("cursor", "pointer");
+        tooltip.style("opacity", 1).style('opacity', 1).style('left', (event.pageX + 10) + 'px')
           .style('top', (event.pageY + 10) + 'px')
         tooltip.html(d.data.events.length + " events");
       })
       .on("mouseout", (event: { currentTarget: any; }, d: any) => {
-        if(!d3.select(event.currentTarget).classed("selected-slice"))
+        if (!d3.select(event.currentTarget).classed("selected-slice"))
           d3.select(event.currentTarget).style("opacity", 1).style("cursor", "default");
         tooltip.style("opacity", 0)
       })
       .on("click", (event: any, d: { data: any; }) => {
-        this.conflictService.setFilteredEvents(d.data.events);
         // if this is already selected, remove the filter
-        if(d3.select(event.currentTarget).classed("selected-slice")) {
+        if (d3.select(event.currentTarget).classed("selected-slice")) {
           d3.select(event.currentTarget).attr("class", "slice").style("opacity", 1);
-          this.filteredEventName = "";
-          this.conflictService.setFilteredEvents([]);
+          // remove the title 
+          if (d.data.name.includes('UA'))
+            this.filteredEventName = this.filteredEventName.replace((", Ukraine - " + this.conflictService.getLabelByIcon(d.data.name)), "");
+          else if (d.data.name.includes('RU'))
+            this.filteredEventName = this.filteredEventName.replace((", Russia - " + this.conflictService.getLabelByIcon(d.data.name)), "");
+          else if (d.data.name.includes('NEUTRAL'))
+            this.filteredEventName = this.filteredEventName.replace((", Neutral - " + this.conflictService.getLabelByIcon(d.data.name)), "");
+          else if (d.data.name.includes('NATO'))
+            this.filteredEventName = this.filteredEventName.replace((", NATO - " + this.conflictService.getLabelByIcon(d.data.name)), "");
+          else
+            this.filteredEventName = this.filteredEventName.replace((", Other - " + this.conflictService.getLabelByIcon(d.data.name)), "");
+          // remove in current filtered events the events of the selected slice
+          let filteredFilters: any = this.conflictService.getFilteredEvents().filter((event: any) => {
+            return event.icon != d.data.name;
+          });
+          if (filteredFilters.length === 0) {
+            this.conflictService.setFilteredEvents([]);
+            this.filteredEventName = "";
+          }
+          else
+            this.conflictService.setFilteredEvents(filteredFilters);
           return;
         }
-        // Remove previous selected slice
-        d3.selectAll(".selected-slice").attr("class", "slice").style("opacity", 1);
-        // Set new selected slice
+        // Make an array of all already selected slices and new selected slice
+        let newFilter: any = this.conflictService.getFilteredEvents() //d.data.events
+        newFilter.push(...d.data.events);
+        console.log("newFilter", newFilter)
+        this.conflictService.setFilteredEvents(newFilter);
         d3.select(event.currentTarget).attr("class", "selected-slice");
         // Set up title
-        if(d.data.name.includes('UA'))
-          this.filteredEventName = "Ukraine - " + this.conflictService.getLabelByIcon(d.data.name);
-        else if(d.data.name.includes('RU'))
-          this.filteredEventName = "Russia - " + this.conflictService.getLabelByIcon(d.data.name);
-        else if(d.data.name.includes('NEUTRAL'))
-          this.filteredEventName = "Neutral - " + this.conflictService.getLabelByIcon(d.data.name);
-        else if(d.data.name.includes('NATO'))
-          this.filteredEventName = "NATO - " + this.conflictService.getLabelByIcon(d.data.name);
+        if (d.data.name.includes('UA'))
+          if (this.filteredEventName == "")
+            this.filteredEventName = "Ukraine - " + this.conflictService.getLabelByIcon(d.data.name);
+          else
+            this.filteredEventName = this.filteredEventName + ", Ukraine - " + this.conflictService.getLabelByIcon(d.data.name);
+        else if (d.data.name.includes('RU'))
+          if (this.filteredEventName == "")
+            this.filteredEventName = "Russia - " + this.conflictService.getLabelByIcon(d.data.name);
+          else
+            this.filteredEventName = this.filteredEventName + ", Russia - " + this.conflictService.getLabelByIcon(d.data.name);
+        else if (d.data.name.includes('NEUTRAL'))
+          if (this.filteredEventName == "")
+            this.filteredEventName = "Neutral - " + this.conflictService.getLabelByIcon(d.data.name);
+          else
+            this.filteredEventName = this.filteredEventName + ", Neutral - " + this.conflictService.getLabelByIcon(d.data.name);
+        else if (d.data.name.includes('NATO'))
+          if (this.filteredEventName == "")
+            this.filteredEventName = "NATO - " + this.conflictService.getLabelByIcon(d.data.name);
+          else
+            this.filteredEventName = this.filteredEventName + ", NATO - " + this.conflictService.getLabelByIcon(d.data.name);
         else
-          this.filteredEventName = "Other - " + this.conflictService.getLabelByIcon(d.data.name);
+          if (this.filteredEventName == "")
+            this.filteredEventName = "Other - " + this.conflictService.getLabelByIcon(d.data.name);
+          else
+            this.filteredEventName = this.filteredEventName + ", Other - " + this.conflictService.getLabelByIcon(d.data.name);
       });
-    
+
     slice.exit().remove();
 
     const text = svg.select(".labels")
@@ -210,16 +245,16 @@ export class PieChartEventsComponent implements OnChanges {
       .data(pie(pieData), key);
 
     console.log("text", text)
-    
+
     text.enter()
       .append("text")
       .attr("dy", ".35em")
-      .text((d : any) => {
+      .text((d: any) => {
         return this.conflictService.getLabelByIcon(d.data.name)
       })
       .merge(text) // Merge enter and update selections
       .transition().duration(1000)
-      .attrTween("transform", (d : any) => textTween(d))
+      .attrTween("transform", (d: any) => textTween(d))
       .styleTween("text-anchor", textAnchorTween);
 
     text.exit().remove();
