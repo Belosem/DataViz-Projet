@@ -1,5 +1,4 @@
-# DataViz-Projet
-Project for Vizualisation of RU-UKR Conflict using D3JS.
+# Visualization of the Russo-Ukranian conflict
 
 # Authors
 - Chafaatou Mahamadou Kona
@@ -27,41 +26,47 @@ Material : https://material.angular.io/
 - Russia GeoJson: https://github.com/simp37/Russia_geoJSON
 - Conflict data: https://geoconfirmed.org/api/placemark/Ukraine
 
-# Cadrage
+# Github page
+- https://belosem.github.io/DataViz-Projet/
 
-## Problème abordé / Besoin auquel le projet répond
 
-Le site de visualisation du conflit Russo-Ukrainien répond au besoin croissant de compréhension et d'accès facile aux événements liés à ce conflit complexe. Face à la surabondance d'informations dispersées, souvent contradictoires, et à la difficulté pour les utilisateurs de suivre l'évolution temporelle des événements, ce projet vise à fournir une plateforme interactive et informative. En combinant une carte interactive, une timeline, des médias liés à chaque événement, et une heatmap d'activité, le site vise à offrir une expérience utilisateur complète pour comprendre et suivre de manière claire et objective l'évolution du conflit Russo-Ukrainien, tout en encourageant la vérification des faits à partir de sources fiables.
+## Description
 
-## Public cible et tâches effectuées dans ce projet
+The Russo-Ukrainian conflict visualization site responds to the growing need for understanding and easy access to events related to this complex conflict. Faced with the overabundance of scattered, often contradictory information, and the difficulty for users to follow the temporal evolution of events, this project aims to provide an interactive and informative platform. By combining an interactive map, a timeline, media related to each event, and an activity heatmap, the site aims to offer a complete user experience to understand and follow in a clear and objective manner the evolution of the Russo-Ukrainian conflict, while encouraging fact-checking from reliable sources.
 
-Cette visualisation s'adresse à un public varié, comprenant des chercheurs, des journalistes, des décideurs politiques, des étudiants, et le grand public souhaitant comprendre l'évolution complexe de ce conflit. 
-Les principales tâches que le projet permettra d'accomplir sont :
+# Sketches
 
-- Analyser les événements les plus récents du conflit Russo-Ukrainien.
-- Vérifier l'authenticité des événements en accédant à des preuves multimédias associées, telles que des images et des vidéos.
-- Explorer l'évolution temporelle du conflit pour identifier les périodes d'activité intense et les moments de relative stabilité.
+- version 1
+![alt text](./dataViz-project/src/assets/sketch/sketch_1.png)
 
-## Sources de données choisies
+- version 2
+![alt text](./dataViz-project/src/assets/sketch/sketch_2.png)
 
-- Données géographiques des régions de l'Ukraine: https://github.com/EugeneBorshch/ukraine_geojson/tree/master
-- Données géographiques des régions de la Russie: https://github.com/simp37/Russia_geoJSON
-Intérêt principal : Ces données fournissent des informations géographiques détaillées sur les régions des deux pays, ce qui est essentiel pour créer une carte interactive précise. Elles permettent de visualiser les événements dans leur contexte spatial.
-Limites potentielles : Les données peuvent devenir obsolètes si des changements territoriaux surviennent. La précision dépend de la mise à jour régulière du jeu de données.
-- Données relatives aux évènements conflictuels: https://geoconfirmed.org/api/placemark/Ukraine
-Intérêt principal : Ces données offrent des informations spécifiques (preuves, types d'évènements ...) sur les événements liés au conflit Russo-Ukrainien, permettant une mise à jour en temps réel de la carte interactive et de la timeline.
-Les limites potentielles de ces données sont entre autresla fiabilité de la source et nous garantissons qu'elles proviennent de source sûre. Chaque évènement est lié à sa source dans la visualisation.
+## Target audience and tasks performed in this project
 
-## Travaux important liés au projet
+This visualization is aimed at a varied audience, including researchers, journalists, students, and the general public wishing to understand the complex evolution of this conflict.
+The main tasks that the project will accomplish are:
+
+- Analyze the most recent events in the Russo-Ukrainian conflict.
+- Verify the authenticity of events by accessing associated multimedia evidence, such as images and videos.
+- Explore the temporal evolution of the conflict to identify periods of intense activity and moments of relative stability.
+
+## Dataset
+
+- Geographic data of regions of Ukraine: https://github.com/EugeneBorshch/ukraine_geojson/tree/master
+- Geographic data of regions of Russia: https://github.com/simp37/Russia_geoJSON  
+Main interest: This data provides detailed geographic information about regions of both countries, which is essential for creating an accurate interactive map. They allow events to be visualized in their spatial context.  
+Potential limitations: Data may become obsolete if territorial changes occur. Accuracy depends on updating the dataset regularly.
+- Data relating to conflict events: https://geoconfirmed.org/api/placemark/Ukraine
+Main interest: These data offer specific information (evidence, types of events, etc.) on events linked to the Russo-Ukrainian conflict, allowing real-time updating of the interactive map and timeline.  
+Potential limitations of this data include the reliability of the source and we guarantee that it comes from a reliable source. Each event is linked to its source in the visualization.
+
+## Organization
+
+- Means of communication: Discord, Tracking Github
+- Identified roles: design, D3 development, deployment
+
+## Work related to the project
 
 - https://geoconfirmed.org
 - https://abardou.github.io/viz-habits/#/vitrine
-
-## Organisation
-
-- Moyens de communication : Discord, Tracking Github
-- Rôles identifiés : design, développement D3, développement frontend
-
-## Scan des esquisses
-
-![alt text](./dataViz-project/src/assets/sketch/sketch_1.png)

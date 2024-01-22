@@ -11,25 +11,30 @@ import { ConflictsService } from 'src/app/services/conflicts.service';
 })
 export class ConflictStatsComponent implements AfterViewInit {
   data: any;
-  selectedEvents: any = [];
+  events: any = [];
   selectedCountry: string = 'Russia';
   countries: { value: string; label: string; path: string }[] = [
     { value: 'Russia', label: 'Russia', path: '../../../assets/data/russia_geojson/Russia.geojson' },
     { value: 'Ukraine', label: 'Ukraine', path: '../../../assets/data/ukraine_geojson/UA_FULL_Ukraine.geojson' }
     // Add more countries as needed
   ];
+  eventsCountPerRegion: { [region: string]: number } = {};
 
   constructor(private conflictsService: ConflictsService) {
-    this.conflictsService.selectedEvents$.subscribe((selectedEvents) => {
-      this.selectedEvents = selectedEvents;
-      console.log('Selected Events:', this.selectedEvents);
-    });
+
   }
 
   /**
    * Load inial data
    */
   ngAfterViewInit() {
+    this.events = this.conflictsService.getAllEvents().map((event: any) => {
+      return {
+        ...event,
+        date: new Date(event.date)  // ISO 8601 format for dates
+      }
+    });
+
     // Load initial data
     this.loadData();
   }
@@ -56,7 +61,10 @@ export class ConflictStatsComponent implements AfterViewInit {
     d3.json(countryPath).then(
       (jsonData) => {
         this.data = jsonData;
-        console.log('Data loaded :', this.data);
+        console.log('Region Data loaded :', this.data);
+
+        // this.eventsCountPerRegion = this.countEventsPerRegion(this.events, this.data);
+        // console.log("Events per region : ", this.countEventsPerRegion);
 
         // Clear previous map
         d3.select('#map-container').selectAll('*').remove();
@@ -77,33 +85,35 @@ export class ConflictStatsComponent implements AfterViewInit {
  * @param eventsData 
  */
 
-/*  setSelectedEvents(svg: any, projection: any, eventsData: any[]) {
+  /*  setSelectedEvents(svg: any, projection: any, eventsData: any[]) {
+  
+      const markersGroup = svg.append('g').attr('class', 'markers');
+  
+      // Convertissez les coordonnées des coins de la carte en coordonnées x, y
+      const [[x0, y0], [x1, y1]] = d3.geoPath().projection(projection).bounds(this.data);
+  
+      // Filtrer les markers
+      const filteredEvents = eventsData.filter((event) => {
+        const [x, y] = projection([event.longitude, event.latitude]);
+        return x >= x0 && x <= x1 && y >= y0 && y <= y1;
+      });
+  
+      // Get event coordinates
+      filteredEvents.forEach((event) => {
+        const [x, y] = projection([event.longitude, event.latitude]);
+  
+        // Add markers on the map
+        markersGroup.append('image')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('width', 10)
+          .attr('height', 10)
+          .attr('xlink:href', `assets/icons_war/${event.icon}`);
+      });
+    }
+    */
 
-    const markersGroup = svg.append('g').attr('class', 'markers');
 
-    // Convertissez les coordonnées des coins de la carte en coordonnées x, y
-    const [[x0, y0], [x1, y1]] = d3.geoPath().projection(projection).bounds(this.data);
-
-    // Filtrer les markers
-    const filteredEvents = eventsData.filter((event) => {
-      const [x, y] = projection([event.longitude, event.latitude]);
-      return x >= x0 && x <= x1 && y >= y0 && y <= y1;
-    });
-
-    // Get event coordinates
-    filteredEvents.forEach((event) => {
-      const [x, y] = projection([event.longitude, event.latitude]);
-
-      // Add markers on the map
-      markersGroup.append('image')
-        .attr('x', x)
-        .attr('y', y)
-        .attr('width', 10)
-        .attr('height', 10)
-        .attr('xlink:href', `assets/icons_war/${event.icon}`);
-    });
-  }
-  */
 
   /**
    * Draw map
@@ -128,13 +138,18 @@ export class ConflictStatsComponent implements AfterViewInit {
       .translate([width / 2, height / 2])
       .scale(2000);
 
-    var path = geoPath();
+    // Choose the appropriate projection based on the selected country
+    const selectedProjection = this.selectedCountry === 'Russia' ? projectionRussia : projectionUkraine;
 
-    if (this.selectedCountry === 'Russia') {
+    var path = geoPath().projection(selectedProjection);
+
+    /**
+     * if (this.selectedCountry === 'Russia') {
       path = geoPath().projection(projectionRussia);
     } else {
       path = geoPath().projection(projectionUkraine);
     }
+     */
 
     const svg = d3.select('#map-container')
       .append('svg')
@@ -199,6 +214,9 @@ export class ConflictStatsComponent implements AfterViewInit {
         });
       svg.call(zoom as any);
     */
+
+
     console.log('Map created successfully!');
   }
+
 }
