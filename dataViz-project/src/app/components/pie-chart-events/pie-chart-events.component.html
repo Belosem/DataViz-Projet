@@ -1,17 +1,15 @@
 <div class="title-container" *ngIf="pieChartData.length > 0">
     <div *ngIf="selectedDate !== ''" class="line-container">
-        <p class="date-select-title">Date séléctionnée :</p>
-        <p>{{selectedDate}}</p>
+        <p class="date-select-title">Date séléctionnée : {{selectedDate}}</p>
     </div>
     <div *ngIf="selectedDate == ''"class="line-container">
-        <p class="date-select-title">Date séléctionnées :</p>
+        <p class="date-select-title"><b>Date séléctionnées :</b></p>
         <p>{{periodFormat(dateRange[0])}}</p>
             <mat-icon aria-hidden="false" aria-label="arrow_forward" fontIcon="arrow_forward"></mat-icon>
         <p>{{periodFormat(dateRange[1])}}</p>
     </div>
     <div *ngIf="filteredEventName != ''" class="line-container">
-        <p class="date-select-title">Filtré par :</p>
-        <p>{{filteredEventName}}</p>
+        <p class="date-select-title"><b>Filtré par :</b> {{filteredEventName}}</p>
     </div>
 </div>
 <div class="title-container" *ngIf="pieChartData.length <= 0">

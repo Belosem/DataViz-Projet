@@ -162,5 +162,9 @@ export class ConflictsService {
   public setFilteredEvents(events: []): void {
     this.filteredEvents$.next(events);
   }
+
+  public getFilteredEvents(): [] {
+    return this.filteredEvents$.getValue();
+  }
   
 }
